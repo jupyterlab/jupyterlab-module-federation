@@ -103,6 +103,7 @@ module.exports = [
     stats: 'verbose',
     ...options,
     module: { rules },
+    resolve: { alias: { "url": false, "buffer": false } },
     plugins: [
       new ModuleFederationPlugin({
         library: {

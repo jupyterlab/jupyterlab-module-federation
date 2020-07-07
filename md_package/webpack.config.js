@@ -98,6 +98,7 @@ module.exports = [
     },
     ...options,
     module: { rules },
+    resolve: { alias: { "url": false, "buffer": false } },
     plugins: [
       new ModuleFederationPlugin({
         name: 'markdownviewer_extension',

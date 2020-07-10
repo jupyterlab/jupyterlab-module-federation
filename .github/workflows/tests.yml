@@ -1,0 +1,49 @@
+name: Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Add conda to $PATH
+      run: echo ::add-path::$CONDA/condabin
+
+    - name: Update conda
+      run: conda update -y -n base conda setuptools
+
+    - name: Init conda
+      run: |
+        conda init bash
+        conda info -a
+    - name: Create the conda environment
+      run: conda create -n jupyterlab-module-federation --yes --quiet -c conda-forge nodejs jupyterlab=2
+      env:
+        PYTHON_VERSION: '3.8'
+
+    - name: Build and install
+      run: |
+        source "$CONDA/etc/profile.d/conda.sh"
+        conda activate jupyterlab-module-federation
+        jlpm && jlpm run build
+
+    - name: Browser check
+      run: |
+        source "$CONDA/etc/profile.d/conda.sh"
+        conda activate jupyterlab-module-federation
+        # Make sure we can start and kill the example
+        python main.py --no-browser &
+        TASK_PID=$!
+        # Make sure the task is running
+        ps -p $TASK_PID || exit 1
+        sleep 5
+        kill $TASK_PID
+        wait $TASK_PID
+

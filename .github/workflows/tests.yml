@@ -25,10 +25,7 @@ jobs:
         conda info -a
     - name: Create the conda environment
       run: |
-        conda create -n jupyterlab-module-federation --yes --quiet -c conda-forge nodejs
-        source "$CONDA/etc/profile.d/conda.sh"
-        conda activate jupyterlab-module-federation 
-        pip install jupyterlab~=2.2.0
+        conda create -n jupyterlab-module-federation --yes --quiet -c conda-forge nodejs jupyterlab
       env:
         PYTHON_VERSION: '3.8'
 

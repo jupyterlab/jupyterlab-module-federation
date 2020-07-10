@@ -2,11 +2,13 @@
 # Distributed under the terms of the Modified BSD License.
 
 from jupyterlab_server import LabServerApp, LabConfig
-from jupyterlab_server.server import FileFindHandler
+from jupyterlab_server.server import FileFindHandler, APIHandler
 from notebook.utils import url_path_join as ujoin
 import json
 import os
 from traitlets import Unicode
+
+from tornado.web import StaticFileHandler
 
 HERE = os.path.dirname(__file__)
 
@@ -16,6 +18,16 @@ os.environ["JUPYTER_NO_CONFIG"]="1"
 
 with open(os.path.join(HERE, 'package.json')) as fid:
     version = json.load(fid)['version']
+
+
+class SettingHandler(APIHandler):
+
+    def get(self, schema_name=""):
+        path = os.path.join(HERE, 'node_modules/@jupyterlab/markdownviewer-extension/schema/plugin.json')
+        with open(path) as fid:
+            data = fid.read()
+        return self.finish(data)
+        
 
 class ExampleApp(LabServerApp):
     base_url = '/foo'
@@ -46,6 +58,10 @@ class ExampleApp(LabServerApp):
         web_app.add_handlers('.*$', [(static_path, FileFindHandler, {
             'path': static_dir,
         })])
+
+        ## Handle the specific setting
+        static_path = ujoin(base_url, 'example', 'api', 'settings', '@jupyterlab', '(.*)')
+        web_app.add_handlers('.*$', [(static_path, SettingHandler, {})])
 
     def start(self):
         settings = self.web_app.settings

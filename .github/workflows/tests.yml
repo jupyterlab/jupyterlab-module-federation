@@ -24,7 +24,8 @@ jobs:
         conda init bash
         conda info -a
     - name: Create the conda environment
-      run: conda create -n jupyterlab-module-federation --yes --quiet -c conda-forge nodejs jupyterlab=2
+      run: |
+        conda create -n jupyterlab-module-federation --yes --quiet -c conda-forge nodejs jupyterlab
       env:
         PYTHON_VERSION: '3.8'
 
@@ -38,12 +39,5 @@ jobs:
       run: |
         source "$CONDA/etc/profile.d/conda.sh"
         conda activate jupyterlab-module-federation
-        # Make sure we can start and kill the example
-        python main.py --no-browser &
-        TASK_PID=$!
-        # Make sure the task is running
-        ps -p $TASK_PID || exit 1
-        sleep 5
-        kill $TASK_PID
-        wait $TASK_PID
+        python run.py
 

@@ -37,7 +37,7 @@ jobs:
     - name: Browser check
       run: |
         source "$CONDA/etc/profile.d/conda.sh"
-        conda activate jupyterlab-debugger
+        conda activate jupyterlab-module-federation
         # Make sure we can start and kill the example
         python main.py --no-browser &
         TASK_PID=$!

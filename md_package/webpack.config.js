@@ -104,7 +104,7 @@ module.exports = [
         name: 'markdownviewer_extension',
         library: {
           type: 'var',
-          name: ['MYNAMESPACE', '@jupyterlab/markdownviewer_extension']
+          name: ['_JUPYTERLAB', '@jupyterlab/markdownviewer_extension']
         },
         filename: 'remoteEntry.js',
         exposes: {

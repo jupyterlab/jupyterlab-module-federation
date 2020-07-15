@@ -9,7 +9,6 @@
     "watch": "npm run clean && webpack --watch"
   },
   "dependencies": {
-    "@jupyterlab/application": "^3.0.0-alpha.1",
     "@jupyterlab/markdownviewer-extension": "^3.0.0-alpha.1"
   },
   "devDependencies": {

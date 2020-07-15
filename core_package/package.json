@@ -21,11 +21,11 @@
     "@jupyterlab/mainmenu-extension": "^3.0.0-alpha.1",
     "@jupyterlab/mathjax2-extension": "^3.0.0-alpha.1",
     "@jupyterlab/rendermime-extension": "^3.0.0-alpha.1",
+    "@jupyterlab/settingregistry": "^2.1.0",
     "@jupyterlab/shortcuts-extension": "^3.0.0-alpha.1",
     "@jupyterlab/theme-dark-extension": "^3.0.0-alpha.1",
     "@jupyterlab/theme-light-extension": "^3.0.0-alpha.1",
     "@jupyterlab/ui-components-extension": "^3.0.0-alpha.1",
-    "es6-promise": "~4.2.8",
     "react": "~16.9.0",
     "react-dom": "~16.9.0"
   },
@@ -47,5 +47,39 @@
     "webpack": "5.0.0-beta.22",
     "webpack-cli": "^3.3.10",
     "whatwg-fetch": "^3.0.0"
+  },
+  "jupyterlab": {
+    "singletonPackages": [
+      "@jupyterlab/application",
+      "@jupyterlab/apputils",
+      "@jupyterlab/console",
+      "@jupyterlab/coreutils",
+      "@jupyterlab/docmanager",
+      "@jupyterlab/extensionmanager",
+      "@jupyterlab/filebrowser",
+      "@jupyterlab/fileeditor",
+      "@jupyterlab/imageviewer",
+      "@jupyterlab/launcher",
+      "@jupyterlab/notebook",
+      "@jupyterlab/rendermime",
+      "@jupyterlab/rendermime-interfaces",
+      "@jupyterlab/services",
+      "@jupyterlab/terminal",
+      "@jupyterlab/tooltip",
+      "@lumino/algorithm",
+      "@lumino/application",
+      "@lumino/commands",
+      "@lumino/coreutils",
+      "@lumino/disposable",
+      "@lumino/domutils",
+      "@lumino/dragdrop",
+      "@lumino/messaging",
+      "@lumino/properties",
+      "@lumino/signaling",
+      "@lumino/virtualdom",
+      "@lumino/widgets",
+      "react",
+      "react-dom"
+    ]
   }
 }

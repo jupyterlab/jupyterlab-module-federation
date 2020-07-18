@@ -8,8 +8,6 @@ const PLUGIN_DATA = JSON.parse(
 );
 
 import { PageConfig } from '@jupyterlab/coreutils';
-// eslint-disable-next-line
-__webpack_public_path__ = PageConfig.getOption('fullStaticUrl') + '/';
 
 // This must be after the public path is set.
 // This cannot be extracted because the public path is dynamic.
@@ -31,11 +29,11 @@ async function loadComponent(url, scope, module) {
 
   // From MIT-licensed https://github.com/module-federation/module-federation-examples/blob/af043acd6be1718ee195b2511adf6011fba4233c/advanced-api/dynamic-remotes/app1/src/App.js#L6-L12
   await __webpack_init_sharing__('default');
-  const container = window.MYNAMESPACE[scope];
+  const container = window._JUPYTERLAB[scope];
   // Initialize the container, it may provide shared modules and may need ours
   await container.init(__webpack_share_scopes__.default);
 
-  const factory = await window.MYNAMESPACE[scope].get(module);
+  const factory = await window._JUPYTERLAB[scope].get(module);
   const Module = factory();
   return Module;
 }
@@ -52,6 +50,8 @@ window.addEventListener('load', async function() {
   );
   const plugins = await Promise.all(pluginPromises);
 
+  // TODO: add logic from dev_mode/index.js for templating
+  // and handling of deferred/disabled plugins
   const mods = [
     require('@jupyterlab/application-extension'),
     require('@jupyterlab/apputils-extension'),

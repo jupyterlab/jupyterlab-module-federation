@@ -1,18 +1,16 @@
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
+
+// TODO: this path should be configurable in final script
 const data = require('./package.json');
 const Build = require('@jupyterlab/buildutils').Build;
 const webpack = require('webpack');
 const { ModuleFederationPlugin } = webpack.container;
 const path = require('path');
 
-const names = Object.keys(data.dependencies).filter(function(name) {
-  const packageData = require(name + '/package.json');
-  return packageData.jupyterlab !== undefined;
-});
 
 const extras = Build.ensureAssets({
-  packageNames: names,
+  packageNames: [data.name],
   output: './build'
 });
 
@@ -55,42 +53,76 @@ const rules = [
   }
 ];
 
+// TODO: this should be configurable
 const options = {
   devtool: 'source-map',
   bail: true,
   mode: 'development'
 };
 
-const singletons = {};
+// TODO: update handling of this data - passed in as a path to this script?
+const coreData = require('../core_package/package.json');
 
-data.jupyterlab.singletonPackages.forEach(element => {
+// Start with core singletons.
+const singletons = {};
+coreData.jupyterlab.singletonPackages.forEach(element => {
   singletons[element] = { singleton: true }
 });
 
+// Add package singletons.
+if (data.jupyterlab.singletonPackages) {
+  data.jupyterlab.singletonPackages.forEach(element => {
+    singletons[element] = { singleton: true }
+  });
+}
+
+// Remove non-singletons.
+if (data.jupyterlab.nonSingletonPackages) {
+  data.jupyterlab.nonSingletonPackages.forEach(element => {
+    delete singletons[element];
+  });
+}
+
+// Start with core shared.
+const shared = coreData.dependencies;
+
+// Add package shared.
+Object.keys(data.dependencies).forEach(element => {
+  shared[element] = data.dependencies[element];
+});
+
+// Remove non-shared.
+if (data.jupyterlab.nonSharedPackages) {
+  data.jupyterlab.nonSharedPackages.forEach(element => {
+    delete shared[element];
+  })
+}
+
 module.exports = [
   {
+    // TODO: this should be based on jupyterlab metadata (and could be more than one type?)
     entry: './index.js',
     output: {
       filename: 'extension.js',
       path: path.resolve(__dirname, 'build'),
-      publicPath: '/foo/example/ext/mdext/'
+      publicPath: 'example/labextensions/' + data.name + '/'
     },
     ...options,
     module: { rules },
     resolve: { alias: { "url": false, "buffer": false } },
     plugins: [
       new ModuleFederationPlugin({
-        name: 'markdownviewer_extension',
+        name: data.name,
         library: {
           type: 'var',
-          name: ['_JUPYTERLAB', '@jupyterlab/markdownviewer_extension']
+          name: ['_JUPYTERLAB', data.name]
         },
         filename: 'remoteEntry.js',
         exposes: {
           './index': './index.js'
         },
         shared: {
-          ...data.dependencies,
+          ...shared,
           ...singletons
         }
       }),

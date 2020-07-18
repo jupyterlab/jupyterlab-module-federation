@@ -3,7 +3,7 @@
 
 from jupyterlab_server import LabServerApp, LabConfig
 from jupyterlab_server.server import FileFindHandler, APIHandler
-from notebook.utils import url_path_join as ujoin
+from notebook.utils import url_path_join as ujoin, url_escape
 import json
 import os
 from traitlets import Unicode
@@ -53,7 +53,7 @@ class ExampleApp(LabServerApp):
         # Handle md ext assets
         web_app = self.web_app
         base_url = web_app.settings['base_url']
-        static_path = ujoin(base_url, 'example', 'ext', 'mdext', '(.*)')
+        static_path = ujoin(base_url, 'example', 'labextensions', '@jupyterlab', 'example-federated-md', '(.*)')
         static_dir = os.path.join(HERE, 'md_package', 'build')
         web_app.add_handlers('.*$', [(static_path, FileFindHandler, {
             'path': static_dir,

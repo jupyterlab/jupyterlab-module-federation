@@ -55,6 +55,7 @@ const rules = [
   }
 ];
 
+// TODO: make this configurable
 const options = {
   devtool: 'source-map',
   bail: true,

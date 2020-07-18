@@ -8,8 +8,6 @@ const PLUGIN_DATA = JSON.parse(
 );
 
 import { PageConfig } from '@jupyterlab/coreutils';
-// eslint-disable-next-line
-__webpack_public_path__ = PageConfig.getOption('fullStaticUrl') + '/';
 
 // This must be after the public path is set.
 // This cannot be extracted because the public path is dynamic.
@@ -52,6 +50,8 @@ window.addEventListener('load', async function() {
   );
   const plugins = await Promise.all(pluginPromises);
 
+  // TODO: add logic from dev_mode/index.js for templating
+  // and handling of deferred/disabled plugins
   const mods = [
     require('@jupyterlab/application-extension'),
     require('@jupyterlab/apputils-extension'),

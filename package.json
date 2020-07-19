@@ -3,10 +3,17 @@
   "version": "2.1.0",
   "private": true,
   "scripts": {
-    "build": "cd core_package && npm run build && cd ../md_package && npm run build"
+    "build": "build:core && node build-ext.js ./md_package",
+    "build:core": "cd core_package && npm run build",
+    "build:ext": "webpack --config webpack.config.ext.js"
   },
   "devDependencies": {
     "rimraf": "^3.0.2"
   },
-  "workspaces": ["*"]
+  "workspaces": [
+    "*"
+  ],
+  "dependencies": {
+    "commander": "^5.1.0"
+  }
 }

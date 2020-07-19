@@ -1,18 +1,11 @@
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
 
-// TODO: this path should be configurable in final script
-const data = require('./package.json');
 const Build = require('@jupyterlab/buildutils').Build;
 const webpack = require('webpack');
 const { ModuleFederationPlugin } = webpack.container;
 const path = require('path');
-
-
-const extras = Build.ensureAssets({
-  packageNames: [data.name],
-  output: './build'
-});
+const fs = require('fs');
 
 const rules = [
   { test: /\.css$/, use: ['style-loader', 'css-loader'] },
@@ -53,15 +46,43 @@ const rules = [
   }
 ];
 
-// TODO: this should be configurable
 const options = {
   devtool: 'source-map',
   bail: true,
   mode: 'development'
 };
 
-// TODO: update handling of this data - passed in as a path to this script?
-const coreData = require('../core_package/package.json');
+const packagePath = process.env.PACKAGE_PATH;
+const outputPath = process.env.OUTPUT_PATH;
+const nodeEnv = process.env.NODE_ENV;
+
+if (nodeEnv === 'production') {
+  options.mode = 'production'
+}
+
+const data = require(path.join(packagePath, '/package.json'));
+
+const extras = Build.ensureAssets({
+  packageNames: [data.name],
+  output: './build'
+});
+
+let entryPoint = data.jupyterlab.extension;
+if (entryPoint === undefined) {
+  entryPoint = data.jupyterlab.mimeExtension;
+}
+
+if (entryPoint === true) {
+  if (entryPoint === true) {
+    // Use require to get the entry point
+    entryPoint = require.resolve(packagePath);
+  } else {
+    // Use the path to get the entry point
+    entryPoint = path.join(packagePath, entryPoint);
+  }
+}
+
+const coreData = require('./core_package/package.json');
 
 // Start with core singletons.
 const singletons = {};
@@ -98,13 +119,16 @@ if (data.jupyterlab.nonSharedPackages) {
   })
 }
 
+// Ensure a clean output directory.
+fs.rmdirSync(outputPath, { recursive: true });
+
+
 module.exports = [
   {
-    // TODO: this should be based on jupyterlab metadata (and could be more than one type?)
-    entry: './index.js',
+    entry: entryPoint,
     output: {
       filename: 'extension.js',
-      path: path.resolve(__dirname, 'build'),
+      path: outputPath,
       publicPath: 'example/labextensions/' + data.name + '/'
     },
     ...options,
@@ -119,7 +143,7 @@ module.exports = [
         },
         filename: 'remoteEntry.js',
         exposes: {
-          './index': './index.js'
+          './index': entryPoint
         },
         shared: {
           ...shared,
@@ -133,3 +157,4 @@ module.exports = [
     ]
   }
 ].concat(extras);
+

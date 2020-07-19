@@ -33,7 +33,9 @@ commander
             const packagePath = path.resolve(cmd.args[0]);
             const output = cmd.output || path.join(packagePath, 'build');
 
-            let cmdText = `npm run build:ext`;
+            const webpack = require.resolve('webpack-cli');
+
+            let cmdText = `${webpack} --config webpack.config.ext.js`;
             run(cmdText, { env: { ...process.env, OUTPUT_PATH: output, PACKAGE_PATH: packagePath, NODE_ENV: node_env } });
         }
     );

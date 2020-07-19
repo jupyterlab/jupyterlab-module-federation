@@ -64,7 +64,7 @@ const data = require(path.join(packagePath, '/package.json'));
 
 const extras = Build.ensureAssets({
   packageNames: [data.name],
-  output: './build'
+  output: outputPath
 });
 
 let entryPoint = data.jupyterlab.extension;

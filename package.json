@@ -3,7 +3,7 @@
   "version": "2.1.0",
   "private": true,
   "scripts": {
-    "build": "build:core && node build-ext.js ./md_package",
+    "build": "npm run build:core && node build-ext.js ./md_package",
     "build:core": "cd core_package && npm run build",
     "build:ext": "webpack --config webpack.config.ext.js"
   },

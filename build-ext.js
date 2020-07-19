@@ -32,7 +32,7 @@ commander
             }
             const packagePath = path.resolve(cmd.args[0]);
             const output = cmd.output || path.join(packagePath, 'build');
-            // Run `npm run build:ext` with args
+
             let cmdText = `npm run build:ext`;
             run(cmdText, { env: { ...process.env, OUTPUT_PATH: output, PACKAGE_PATH: packagePath, NODE_ENV: node_env } });
         }

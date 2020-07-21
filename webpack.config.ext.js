@@ -67,12 +67,8 @@ const extras = Build.ensureAssets({
   output: outputPath
 });
 
-let entryPoint = data.jupyterlab.extension;
-if (entryPoint === undefined) {
-  entryPoint = data.jupyterlab.mimeExtension;
-}
+let entryPoint = data.jupyterlab.extension ?? data.jupyterlab.mimeExtension;
 
-if (entryPoint === true) {
   if (entryPoint === true) {
     // Use require to get the entry point
     entryPoint = require.resolve(packagePath);
@@ -80,48 +76,56 @@ if (entryPoint === true) {
     // Use the path to get the entry point
     entryPoint = path.join(packagePath, entryPoint);
   }
-}
 
 const coreData = require('./core_package/package.json');
 
-// Start with core singletons.
-const singletons = {};
-coreData.jupyterlab.singletonPackages.forEach(element => {
-  singletons[element] = { singleton: true }
-});
+const shared = {};
 
-// Add package singletons.
-if (data.jupyterlab.singletonPackages) {
-  data.jupyterlab.singletonPackages.forEach(element => {
-    singletons[element] = { singleton: true }
+// Start with core dependencies.
+Object.keys(coreData.dependencies).forEach((element) => {
+  shared[element] = { requiredVersion: coreData.dependencies[element] };
   });
+
+// Add package dependencies.
+Object.keys(data.dependencies).forEach((element) => {
+  if (!shared[element]) {
+    shared[element] = {};
 }
-
-// Remove non-singletons.
-if (data.jupyterlab.nonSingletonPackages) {
-  data.jupyterlab.nonSingletonPackages.forEach(element => {
-    delete singletons[element];
-  });
-}
-
-// Start with core shared.
-const shared = coreData.dependencies;
-
-// Add package shared.
-Object.keys(data.dependencies).forEach(element => {
-  shared[element] = data.dependencies[element];
+  shared[element].requiredVersion = data.dependencies[element];
 });
 
 // Remove non-shared.
-if (data.jupyterlab.nonSharedPackages) {
-  data.jupyterlab.nonSharedPackages.forEach(element => {
-    delete shared[element];
-  })
+data.jupyterlab.nonSharedPackages?.forEach((element) => {
+  delete shared[element];
+  });
+
+// Start with core singletons.
+coreData.jupyterlab.singletonPackages.forEach((element) => {
+  if (!shared[element]) {
+    shared[element] = {};
 }
+  shared[element].import = false;
+  shared[element].singleton = true;
+});
+
+// Add package singletons.
+data.jupyterlab.singletonPackages?.forEach((element) => {
+  if (!shared[element]) {
+    shared[element] = {};
+  }
+  shared[element].singleton = true;
+});
+
+// Remove non-singletons.
+data.jupyterlab.nonSingletonPackages?.forEach((element) => {
+  if (!shared[element]) {
+    shared[element] = {};
+}
+  shared[element].singleton = false;
+});
 
 // Ensure a clean output directory.
 fs.rmdirSync(outputPath, { recursive: true });
-
 
 module.exports = [
   {
@@ -129,11 +133,11 @@ module.exports = [
     output: {
       filename: 'extension.js',
       path: outputPath,
-      publicPath: 'example/labextensions/' + data.name + '/'
+      publicPath: `example/labextensions/${data.name}/`,
     },
     ...options,
     module: { rules },
-    resolve: { alias: { "url": false, "buffer": false } },
+    resolve: { alias: { url: false, buffer: false } },
     plugins: [
       new ModuleFederationPlugin({
         name: data.name,
@@ -145,10 +149,7 @@ module.exports = [
         exposes: {
           './index': entryPoint
         },
-        shared: {
-          ...shared,
-          ...singletons
-        }
+        shared,
       }),
       new webpack.DefinePlugin({
         'process.env': '{}',
@@ -158,3 +159,6 @@ module.exports = [
   }
 ].concat(extras);
 
+// TODO: remove debug log
+// console.log(module.exports);
+fs.writeFileSync('log.json', JSON.stringify(module.exports, null, '  '));

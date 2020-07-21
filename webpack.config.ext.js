@@ -94,10 +94,13 @@ Object.keys(data.dependencies).forEach((element) => {
   shared[element].requiredVersion = data.dependencies[element];
 });
 
+// Share ourselves.
+shared[data.name] = { requiredVersion: '~' + data.version };
+
 // Remove non-shared.
 data.jupyterlab.nonSharedPackages?.forEach((element) => {
   delete shared[element];
-  });
+});
 
 // Start with core singletons.
 coreData.jupyterlab.singletonPackages.forEach((element) => {
@@ -161,4 +164,4 @@ module.exports = [
 
 // TODO: remove debug log
 // console.log(module.exports);
-fs.writeFileSync('log.json', JSON.stringify(module.exports, null, '  '));
+fs.writeFileSync('log_' + data.name.split('/')[1] + '.json', JSON.stringify(module.exports, null, '  '));

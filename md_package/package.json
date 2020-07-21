@@ -10,6 +10,7 @@
     "@jupyterlab/application": "^3.0.0-alpha.4",
     "@jupyterlab/apputils": "^3.0.0-alpha.4",
     "@jupyterlab/coreutils": "^5.0.0-alpha.4",
+    "@jupyterlab/example-federated-middle": "2.1.0",
     "@jupyterlab/markdownviewer": "^3.0.0-alpha.4",
     "@jupyterlab/rendermime": "^3.0.0-alpha.4",
     "@jupyterlab/settingregistry": "^3.0.0-alpha.4"

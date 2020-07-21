@@ -36,7 +36,9 @@ commander
             const webpack = require.resolve('webpack-cli');
 
             let cmdText = `${webpack} --config webpack.config.ext.js`;
-            run(cmdText, { env: { ...process.env, OUTPUT_PATH: output, PACKAGE_PATH: packagePath, NODE_ENV: node_env } });
+            const env = { OUTPUT_PATH: output, PACKAGE_PATH: packagePath, NODE_ENV: node_env };
+            console.log(env);
+            run(cmdText, { env: { ...process.env, ...env } });
         }
     );
 

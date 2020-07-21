@@ -10,7 +10,7 @@ from traitlets import Unicode
 
 from tornado.web import StaticFileHandler
 
-HERE = os.path.dirname(__file__)
+HERE = os.path.abspath(os.path.dirname(__file__))
 
 # Turn off the Jupyter configuration system so configuration files on disk do
 # not affect this app. This helps this app to truly be standalone.
@@ -28,6 +28,15 @@ class SettingHandler(APIHandler):
             data = fid.read()
         return self.finish(data)
         
+    
+class ExtensionHandler(FileFindHandler):
+
+    def get(self, path):
+        extname, _, rest = path.partition('/')
+        dirname = 'md_package' if extname == 'example-federated-md' else 'middle_package'
+        path = os.path.join(dirname, 'build', rest)
+        return super().get(path)
+
 
 class ExampleApp(LabServerApp):
     base_url = '/foo'
@@ -53,11 +62,9 @@ class ExampleApp(LabServerApp):
         # Handle md ext assets
         web_app = self.web_app
         base_url = web_app.settings['base_url']
-        static_path = ujoin(base_url, 'example', 'labextensions', '@jupyterlab', 'example-federated-md', '(.*)')
-        static_dir = os.path.join(HERE, 'md_package', 'build')
-        web_app.add_handlers('.*$', [(static_path, FileFindHandler, {
-            'path': static_dir,
-        })])
+
+        static_path = ujoin(base_url, 'example', 'labextensions', '@jupyterlab', '(.*)')
+        web_app.add_handlers('.*$', [(static_path, ExtensionHandler, { 'path': HERE })])
 
         ## Handle the specific setting
         static_path = ujoin(base_url, 'example', 'api', 'settings', '@jupyterlab', '(.*)')

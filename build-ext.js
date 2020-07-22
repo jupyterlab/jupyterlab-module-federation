@@ -31,7 +31,7 @@ commander
                 node_env = 'production';
             }
             const packagePath = path.resolve(cmd.args[0]);
-            const output = cmd.output || path.join(packagePath, 'build');
+            const output = cmd.output || path.join(__dirname, 'labextensions');
 
             const webpack = require.resolve('webpack-cli');
 

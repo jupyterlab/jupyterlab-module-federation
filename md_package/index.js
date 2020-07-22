@@ -36,7 +36,7 @@ function activate(app, restorer, rendermime, settingRegistry, middleToken) {
     const { commands, docRegistry } = app;
 
     console.log('middleToken', middleToken);
-    
+
     // Add the markdown renderer factory.
     rendermime.addFactory(markdownRendererFactory);
     const namespace = 'markdownviewer-widget';

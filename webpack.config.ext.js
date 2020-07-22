@@ -67,15 +67,17 @@ const extras = Build.ensureAssets({
   output: outputPath
 });
 
-let entryPoint = data.jupyterlab.extension ?? data.jupyterlab.mimeExtension;
+// Handle the extension entry point and the lib entry point, if different
+let extPath = data.jupyterlab.extension ?? data.jupyterlab.mimeExtension;
+const index = require.resolve(packagePath);
+const exposes = {
+  './index': index,
+  './extension': index
+}
 
-  if (entryPoint === true) {
-    // Use require to get the entry point
-    entryPoint = require.resolve(packagePath);
-  } else {
-    // Use the path to get the entry point
-    entryPoint = path.join(packagePath, entryPoint);
-  }
+if (extPath !== true) {
+  exposes['./extension'] = path.join(packagePath, extPath);
+}
 
 const coreData = require('./core_package/package.json');
 
@@ -113,7 +115,7 @@ data.jupyterlab.singletonPackages?.forEach((element) => {
   if (!shared[element]) {
     shared[element] = {};
   }
-  shared[element].singleton = true;
+  shared[element].import = false;
 });
 
 // Remove non-singletons.
@@ -126,6 +128,12 @@ data.jupyterlab.nonSingletonPackages?.forEach((element) => {
 
 // Ensure a clean output directory.
 fs.rmdirSync(outputPath, { recursive: true });
+fs.mkdirSync(outputPath);
+
+// Make a bootstrap entrypoint
+const entryPoint = path.join(outputPath, 'bootstrap.js');
+const bootstrap = 'import("' + exposes['./extension'] + '");'
+fs.writeFileSync(entryPoint, bootstrap);
 
 module.exports = [
   {
@@ -146,9 +154,7 @@ module.exports = [
           name: ['_JUPYTERLAB', data.name]
         },
         filename: 'remoteEntry.js',
-        exposes: {
-          './index': entryPoint
-        },
+        exposes,
         shared,
       }),
       new webpack.DefinePlugin({
@@ -159,5 +165,5 @@ module.exports = [
   }
 ].concat(extras);
 
-const logPath = path.join(OUTPUT_PATH, 'build_log.json');
+const logPath = path.join(outputPath, 'build_log.json');
 fs.writeFileSync(logPath, JSON.stringify(module.exports, null, '  '));

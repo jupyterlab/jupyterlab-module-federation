@@ -6,7 +6,6 @@ import { MarkdownViewer, MarkdownViewerFactory, IMarkdownViewerTracker } from '@
 import { IRenderMimeRegistry, markdownRendererFactory } from '@jupyterlab/rendermime';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import { PathExt } from '@jupyterlab/coreutils';
-import { IMiddleToken } from '@jupyterlab/example-federated-middle';
 /**
  * The command IDs used by the markdownviewer plugin.
  */
@@ -26,7 +25,7 @@ const plugin = {
     activate,
     id: '@jupyterlab/markdownviewer-extension:plugin',
     provides: IMarkdownViewerTracker,
-    requires: [ILayoutRestorer, IRenderMimeRegistry, ISettingRegistry, IMiddleToken],
+    requires: [ILayoutRestorer, IRenderMimeRegistry, ISettingRegistry],
     autoStart: true
 };
 /**
@@ -34,8 +33,6 @@ const plugin = {
  */
 function activate(app, restorer, rendermime, settingRegistry, middleToken) {
     const { commands, docRegistry } = app;
-
-    console.log('middleToken', middleToken);
 
     // Add the markdown renderer factory.
     rendermime.addFactory(markdownRendererFactory);

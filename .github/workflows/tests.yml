@@ -39,5 +39,6 @@ jobs:
       run: |
         source "$CONDA/etc/profile.d/conda.sh"
         conda activate jupyterlab-module-federation
+        pip install jupyterlab==2.1.5
         python run.py
 

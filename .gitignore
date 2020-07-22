@@ -2,4 +2,3 @@ stats.json
 node_modules
 core_package/build
 md_package/build
-log.json

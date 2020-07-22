@@ -94,9 +94,6 @@ Object.keys(data.dependencies).forEach((element) => {
   shared[element].requiredVersion = data.dependencies[element];
 });
 
-// Share ourselves.
-shared[data.name] = { requiredVersion: '~' + data.version };
-
 // Remove non-shared.
 data.jupyterlab.nonSharedPackages?.forEach((element) => {
   delete shared[element];
@@ -162,6 +159,5 @@ module.exports = [
   }
 ].concat(extras);
 
-// TODO: remove debug log
-// console.log(module.exports);
-fs.writeFileSync('log_' + data.name.split('/')[1] + '.json', JSON.stringify(module.exports, null, '  '));
+const logPath = path.join(OUTPUT_PATH, 'build_log.json');
+fs.writeFileSync(logPath, JSON.stringify(module.exports, null, '  '));

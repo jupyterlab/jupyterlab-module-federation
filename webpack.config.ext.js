@@ -53,7 +53,7 @@ const options = {
 };
 
 const packagePath = process.env.PACKAGE_PATH;
-const outputPath = process.env.OUTPUT_PATH;
+let outputPath = process.env.OUTPUT_PATH;
 const nodeEnv = process.env.NODE_ENV;
 
 if (nodeEnv === 'production') {
@@ -62,21 +62,23 @@ if (nodeEnv === 'production') {
 
 const data = require(path.join(packagePath, '/package.json'));
 
+outputPath = path.join(outputPath, data.name);
+
 const extras = Build.ensureAssets({
   packageNames: [data.name],
   output: outputPath
 });
 
 // Handle the extension entry point and the lib entry point, if different
-let extPath = data.jupyterlab.extension ?? data.jupyterlab.mimeExtension;
+let extEntry = data.jupyterlab.extension ?? data.jupyterlab.mimeExtension;
 const index = require.resolve(packagePath);
 const exposes = {
   './index': index,
   './extension': index
 }
 
-if (extPath !== true) {
-  exposes['./extension'] = path.join(packagePath, extPath);
+if (extEntry !== true) {
+  exposes['./extension'] = path.join(packagePath, extEntry);
 }
 
 const coreData = require('./core_package/package.json');

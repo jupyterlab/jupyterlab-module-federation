@@ -21,21 +21,27 @@ SETTINGS_EXTENSION = '.jupyterlab-settings'
 def _get_schema(schemas_dir, schema_name, overrides, labextensions_path):
     """Returns a dict containing a parsed and validated JSON schema."""
 
-    path = _path(schemas_dir, schema_name)
+    
     notfound_error = 'Schema not found: %s'
     parse_error = 'Failed parsing schema (%s): %s'
     validation_error = 'Failed validating schema (%s): %s'
 
-    if not os.path.exists(path):
-        # Look for the setting in all of the labextension paths
-        if labextensions_path is not None:
-            ext_name, _, plugin_name = schema_name.partition(':')
-            for ext_path in labextensions_path:
-                target = os.path.join(ext_path, ext_name, 'schemas', ext_name, plugin_name + '.json')
-                if os.path.exists(target):
-                    path = target
-                    import pdb; pdb.set_trace()
-                    break
+    path = None
+
+    # Look for the setting in all of the labextension paths first
+    # Use the first one
+    if labextensions_path is not None:
+        ext_name, _, plugin_name = schema_name.partition(':')
+        for ext_path in labextensions_path:
+            target = os.path.join(ext_path, ext_name, 'schemas', ext_name, plugin_name + '.json')
+            if os.path.exists(target):
+                schemas_dir = os.path.join(ext_path, ext_name, 'schemas')
+                path = target
+                break
+
+    # Fall back on the default location
+    if path is None:
+        path = _path(schemas_dir, schema_name)
 
     if not os.path.exists(path):
         raise web.HTTPError(404, notfound_error % path)
@@ -57,7 +63,9 @@ def _get_schema(schemas_dir, schema_name, overrides, labextensions_path):
         name = schema_name
         raise web.HTTPError(500, validation_error % (name, str(e)))
 
-    return schema
+    version = _get_version(schemas_dir, schema_name)
+
+    return schema, version
 
 
 def _get_user_settings(settings_dir, schema_name, schema):
@@ -141,9 +149,8 @@ def _list_settings(schemas_dir, settings_dir, overrides, extension='.json', labe
             rel_schema_dir,
             schema_base[:-len(extension)]  # Remove file extension.
         ]).replace('\\', '/')               # Normalize slashes.
-        schema = _get_schema(schemas_dir, schema_name, overrides, None)
+        schema, version = _get_schema(schemas_dir, schema_name, overrides, None)
         user_settings = _get_user_settings(settings_dir, schema_name, schema)
-        version = _get_version(schemas_dir, schema_name)
 
         if 'warning' in user_settings:
             warnings.append(user_settings.pop('warning'))
@@ -156,42 +163,44 @@ def _list_settings(schemas_dir, settings_dir, overrides, extension='.json', labe
         )
  
     if labextensions_path is not None:
+        schema_paths = []
         for ext_dir in labextensions_path:
             schema_pattern = ext_dir + '/**/schemas/**/*' + extension
-            schema_paths = [path for path in glob(schema_pattern, recursive=True)]
-            schema_paths.sort()
+            schema_paths.extend([path for path in glob(schema_pattern, recursive=True)])
+        
+        schema_paths.sort()
 
-            for schema_path in schema_paths:
-                # TODO: update this logic
+        for schema_path in schema_paths:
+            schema_path = schema_path.replace(os.sep, '/')
 
-                # Generate the schema_name used to request individual settings.
-                rel_path = os.path.relpath(schema_path, schemas_dir)
-                rel_schema_dir, schema_base = os.path.split(rel_path)
-                id = schema_name = ':'.join([
-                    rel_schema_dir,
-                    schema_base[:-len(extension)]  # Remove file extension.
-                ]).replace('\\', '/')               # Normalize slashes.
+            base_dir, rel_path = schema_path.split('schemas/')
 
-                # bail if we've already handled the highest dynamic setting
-                if id in dynamic_settings:
-                    continue
+            # Generate the schema_name used to request individual settings.
+            rel_schema_dir, schema_base = os.path.split(rel_path)
+            id = schema_name = ':'.join([
+                rel_schema_dir,
+                schema_base[:-len(extension)]  # Remove file extension.
+            ]).replace('\\', '/')               # Normalize slashes.
 
-                schema = _get_schema(schemas_dir, schema_name, overrides, None)
-                user_settings = _get_user_settings(settings_dir, schema_name, schema)
-                version = _get_version(schemas_dir, schema_name)
+            # bail if we've already handled the highest dynamic setting
+            if id in dynamic_settings:
+                continue
 
-                if 'warning' in user_settings:
-                    warnings.append(user_settings.pop('warning'))
+            schema, version = _get_schema(schemas_dir, schema_name, overrides, labextensions_path=labextensions_path)
+            user_settings = _get_user_settings(settings_dir, schema_name, schema)
 
-                # Add the plugin to the list of settings.
-                dynamic_settings[id] = dict(
-                    id=id,
-                    version=version,
-                    **user_settings
-                )
+            if 'warning' in user_settings:
+                warnings.append(user_settings.pop('warning'))
 
-    settings = settings.update(dynamic_settings)
-    settings_list = sorted(settings.values()) 
+            # Add the plugin to the list of settings.
+            dynamic_settings[id] = dict(
+                id=id,
+                version=version,
+                **user_settings
+            )
+
+    settings.update(dynamic_settings)
+    settings_list = [settings[key] for key in sorted(settings.keys(), reverse=True)]
 
     return (settings_list, warnings)
 
@@ -286,9 +295,8 @@ def get_settings(app_settings_dir, schemas_dir, settings_dir, schema_name="", ov
         overrides, _error = _get_overrides(app_settings_dir)
 
     if schema_name:
-        schema = _get_schema(schemas_dir, schema_name, overrides, labextensions_path)
+        schema, version = _get_schema(schemas_dir, schema_name, overrides, labextensions_path)
         user_settings = _get_user_settings(settings_dir, schema_name, schema)
-        version = _get_version(schemas_dir, schema_name)
         warnings = [user_settings.pop('warning', None)]
         result = {
             "id": schema_name,
@@ -348,7 +356,7 @@ class SettingsHandler(APIHandler):
         raw = self.request.body.strip().decode(u'utf-8')
 
         # Validate the data against the schema.
-        schema = _get_schema(schemas_dir, schema_name, overrides, labextensions_path)
+        schema, _ = _get_schema(schemas_dir, schema_name, overrides, labextensions_path)
         validator = Validator(schema)
         try:
             validator.validate(json5.loads(raw))

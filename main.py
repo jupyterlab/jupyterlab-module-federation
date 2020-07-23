@@ -12,6 +12,8 @@ from traitlets import Unicode, List
 
 from tornado.web import StaticFileHandler
 
+from settings_handler import SettingsHandler
+
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 # Turn off the Jupyter configuration system so configuration files on disk do
@@ -20,20 +22,6 @@ os.environ["JUPYTER_NO_CONFIG"]="1"
 
 with open(os.path.join(HERE, 'package.json')) as fid:
     version = json.load(fid)['version']
-
-
-class SettingHandler(APIHandler):
-
-    def get(self, schema_name=""):
-        path = os.path.join(HERE, 'node_modules/@jupyterlab/markdownviewer-extension/schema/plugin.json')
-
-        with open(path) as fid:
-            schema = fid.read()
-
-        # copy-pasta of typical response for now.
-        result = {"id":"@jupyterlab/markdownviewer-extension:plugin","raw":"{}","schema":{"jupyter.lab.setting-icon":"ui-components:markdown","jupyter.lab.setting-icon-label":"Markdown Viewer","title":"Markdown Viewer","description":"Markdown viewer settings.","definitions":{"fontFamily":{"type":["string","null"]},"fontSize":{"type":["integer","null"],"minimum":1,"maximum":100},"lineHeight":{"type":["number","null"]},"lineWidth":{"type":["number","null"]},"hideFrontMatter":{"type":"boolean"},"renderTimeout":{"type":"number"}},"properties":{"fontFamily":{"title":"Font Family","description":"The font family used to render markdown.\nIf `null`, value from current theme is used.","$ref":"#/definitions/fontFamily","default":None},"fontSize":{"title":"Font Size","description":"The size in pixel of the font used to render markdown.\nIf `null`, value from current theme is used.","$ref":"#/definitions/fontSize","default":None},"lineHeight":{"title":"Line Height","description":"The line height used to render markdown.\nIf `null`, value from current theme is used.","$ref":"#/definitions/lineHeight","default":None},"lineWidth":{"title":"Line Width","description":"The text line width expressed in CSS ch units.\nIf `null`, lines fit the viewport width.","$ref":"#/definitions/lineWidth","default":None},"hideFrontMatter":{"title":"Hide Front Matter","description":"Whether to hide YAML front matter.\nThe YAML front matter must be placed at the top of the document,\nstarted by a line of three dashes (---) and ended by a line of\nthree dashes (---) or three points (...).","$ref":"#/definitions/hideFrontMatter","default":True},"renderTimeout":{"title":"Render Timeout","description":"The render timeout in milliseconds.","$ref":"#/definitions/renderTimeout","default":1000}},"additionalProperties":False,"type":"object"},"settings":{},"version":"2.2.0"}
-
-        return self.finish(result)
 
 
 class ExampleApp(LabServerApp):
@@ -64,22 +52,36 @@ class ExampleApp(LabServerApp):
         # Handle labextension assets
         web_app = self.web_app
         base_url = web_app.settings['base_url']
+        handlers = []
 
         # Temporary addition for testing
         self.extra_labextensions_path += [os.path.join(HERE, 'labextensions')]
 
         labextensions_path = self.extra_labextensions_path + jupyter_path('labextensions')
         labextensions_url = ujoin(base_url, "example", r"labextensions/(.*)")
-        web_app.add_handlers('.*$', [
+        handlers.append(
             (labextensions_url, FileFindHandler, {
                 'path': labextensions_path,
                 'no_cache_paths': ['/'], # don't cache anything in labextensions
-            })])
+            }))
 
-        ## Handle the specific setting
-        static_path = ujoin(base_url, 'example', 'api', 'settings', '@jupyterlab', '(.*)')
-        web_app.add_handlers('.*$', [(static_path, SettingHandler, {})])
+        # Handle requests for the list of settings. Make slash optional.
+        settings_path = ujoin(base_url, 'example', 'api', 'settings')
+        settings_config = {
+            'app_settings_dir': self.lab_config.app_settings_dir,
+            'schemas_dir': self.lab_config.schemas_dir,
+            'settings_dir': self.lab_config.user_settings_dir,
+            'labextensions_path': labextensions_path
+        }
 
+        handlers.append((ujoin(settings_path, '?'), SettingsHandler, settings_config))
+
+        # Handle requests for an individual set of settings.
+        setting_path = ujoin(
+            settings_path, '(?P<schema_name>.+)')
+        handlers.append((setting_path, SettingsHandler, settings_config))
+
+        web_app.add_handlers('.*$', handlers)
 
     def start(self):
         settings = self.web_app.settings

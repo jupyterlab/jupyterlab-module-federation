@@ -64,11 +64,6 @@ const data = require(path.join(packagePath, '/package.json'));
 
 outputPath = path.join(outputPath, data.name);
 
-const extras = Build.ensureAssets({
-  packageNames: [data.name],
-  output: outputPath
-});
-
 // Handle the extension entry point and the lib entry point, if different
 let extEntry = data.jupyterlab.extension ?? data.jupyterlab.mimeExtension;
 const index = require.resolve(packagePath);
@@ -130,7 +125,12 @@ data.jupyterlab.nonSingletonPackages?.forEach((element) => {
 
 // Ensure a clean output directory.
 fs.rmdirSync(outputPath, { recursive: true });
-fs.mkdirSync(outputPath);
+fs.mkdirSync(outputPath, { recursive: true });
+
+const extras = Build.ensureAssets({
+  packageNames: [data.name],
+  output: outputPath
+});
 
 // Make a bootstrap entrypoint
 const entryPoint = path.join(outputPath, 'bootstrap.js');

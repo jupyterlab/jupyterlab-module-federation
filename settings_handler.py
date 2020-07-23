@@ -27,8 +27,17 @@ def _get_schema(schemas_dir, schema_name, overrides, labextensions_path):
     validation_error = 'Failed validating schema (%s): %s'
 
     if not os.path.exists(path):
-        # Look for the setting in all of the paths
-        import pdb; pdb.set_trace()
+        # Look for the setting in all of the labextension paths
+        if labextensions_path is not None:
+            ext_name, _, plugin_name = schema_name.partition(':')
+            for ext_path in labextensions_path:
+                target = os.path.join(ext_path, ext_name, 'schemas', ext_name, plugin_name + '.json')
+                if os.path.exists(target):
+                    path = target
+                    import pdb; pdb.set_trace()
+                    break
+
+    if not os.path.exists(path):
         raise web.HTTPError(404, notfound_error % path)
 
     with open(path) as fid:
@@ -113,7 +122,8 @@ def _list_settings(schemas_dir, settings_dir, overrides, extension='.json', labe
        validating the user overrides against the schemas.
     """
 
-    settings_list = []
+    settings = {}
+    dynamic_settings = {}
     warnings = []
 
     if not os.path.exists(schemas_dir):
@@ -131,7 +141,7 @@ def _list_settings(schemas_dir, settings_dir, overrides, extension='.json', labe
             rel_schema_dir,
             schema_base[:-len(extension)]  # Remove file extension.
         ]).replace('\\', '/')               # Normalize slashes.
-        schema = _get_schema(schemas_dir, schema_name, overrides, labextensions_path)
+        schema = _get_schema(schemas_dir, schema_name, overrides, None)
         user_settings = _get_user_settings(settings_dir, schema_name, schema)
         version = _get_version(schemas_dir, schema_name)
 
@@ -139,11 +149,49 @@ def _list_settings(schemas_dir, settings_dir, overrides, extension='.json', labe
             warnings.append(user_settings.pop('warning'))
 
         # Add the plugin to the list of settings.
-        settings_list.append(dict(
+        settings[id] = dict(
             id=id,
             version=version,
             **user_settings
-        ))
+        )
+ 
+    if labextensions_path is not None:
+        for ext_dir in labextensions_path:
+            schema_pattern = ext_dir + '/**/schemas/**/*' + extension
+            schema_paths = [path for path in glob(schema_pattern, recursive=True)]
+            schema_paths.sort()
+
+            for schema_path in schema_paths:
+                # TODO: update this logic
+
+                # Generate the schema_name used to request individual settings.
+                rel_path = os.path.relpath(schema_path, schemas_dir)
+                rel_schema_dir, schema_base = os.path.split(rel_path)
+                id = schema_name = ':'.join([
+                    rel_schema_dir,
+                    schema_base[:-len(extension)]  # Remove file extension.
+                ]).replace('\\', '/')               # Normalize slashes.
+
+                # bail if we've already handled the highest dynamic setting
+                if id in dynamic_settings:
+                    continue
+
+                schema = _get_schema(schemas_dir, schema_name, overrides, None)
+                user_settings = _get_user_settings(settings_dir, schema_name, schema)
+                version = _get_version(schemas_dir, schema_name)
+
+                if 'warning' in user_settings:
+                    warnings.append(user_settings.pop('warning'))
+
+                # Add the plugin to the list of settings.
+                dynamic_settings[id] = dict(
+                    id=id,
+                    version=version,
+                    **user_settings
+                )
+
+    settings = settings.update(dynamic_settings)
+    settings_list = sorted(settings.values()) 
 
     return (settings_list, warnings)
 
@@ -249,7 +297,7 @@ def get_settings(app_settings_dir, schemas_dir, settings_dir, schema_name="", ov
             **user_settings
         }
     else:
-        settings_list, warnings = _list_settings(schemas_dir, settings_dir, overrides)
+        settings_list, warnings = _list_settings(schemas_dir, settings_dir, overrides, labextensions_path=labextensions_path)
         result = {
             "settings": settings_list,
         }

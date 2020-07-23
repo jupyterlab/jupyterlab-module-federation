@@ -23,7 +23,7 @@ const FACTORY = 'Markdown Preview';
  */
 const plugin = {
     activate,
-    id: '@jupyterlab/markdownviewer-extension:plugin',
+    id: '@jupyterlab/example-federated-md:plugin',
     provides: IMarkdownViewerTracker,
     requires: [ILayoutRestorer, IRenderMimeRegistry, ISettingRegistry],
     autoStart: true

@@ -81,7 +81,6 @@
     "@jupyterlab/tabmanager-extension": "~3.0.0-alpha.4",
     "@jupyterlab/terminal": "~3.0.0-alpha.4",
     "@jupyterlab/terminal-extension": "~3.0.0-alpha.4",
-    "@jupyterlab/theme-dark-extension": "~3.0.0-alpha.4",
     "@jupyterlab/theme-light-extension": "~3.0.0-alpha.4",
     "@jupyterlab/toc": "~5.0.0-alpha.4",
     "@jupyterlab/toc-extension": "~5.0.0-alpha.4",

@@ -64,7 +64,6 @@ window.addEventListener('load', async function() {
     require('@jupyterlab/mainmenu-extension'),
     require('@jupyterlab/rendermime-extension'),
     require('@jupyterlab/shortcuts-extension'),
-    require('@jupyterlab/theme-dark-extension'),
     require('@jupyterlab/theme-light-extension'),
     require('@jupyterlab/ui-components-extension'),
     ...plugins

@@ -13,6 +13,7 @@ from traitlets import Unicode, List
 from tornado.web import StaticFileHandler
 
 from settings_handler import SettingsHandler
+from themes_handler import ThemesHandler
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
@@ -80,6 +81,19 @@ class ExampleApp(LabServerApp):
         setting_path = ujoin(
             settings_path, '(?P<schema_name>.+)')
         handlers.append((setting_path, SettingsHandler, settings_config))
+
+        # Handle requests for themes
+        themes_path = ujoin(base_url, 'example', 'api', 'themes', '(.*)')
+        handlers.append((
+            themes_path,
+            ThemesHandler,
+            {
+                'themes_url': themes_path,
+                'path': self.lab_config.themes_dir,
+                'labextensions_path': labextensions_path,
+                'no_cache_paths': ['/']
+            }
+        ))
 
         web_app.add_handlers('.*$', handlers)
 

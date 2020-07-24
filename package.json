@@ -3,14 +3,12 @@
   "version": "2.1.0",
   "private": true,
   "scripts": {
-    "build": "npm run build:core && npm run build:middle && npm run build:md",
+    "build": "npm run build:core && npm run build:middle && npm run build:md && npm run build:theme",
     "build:core": "cd core_package && npm run build",
     "build:middle": "node build-ext.js ./middle_package",
     "build:md": "node build-ext.js ./md_package",
-    "clean:core": "cd core_package && npm run clean",
-    "clean:md": "rimraf md_package/build",
-    "clean:middle": "rimraf middle_package/build",
-    "clean": "npm run clean:md && npm run clean:middle && npm run clean:core"
+    "build:theme": "node build-ext.js ./theme_package",
+    "clean": "rimraf labextensions"
   },
   "devDependencies": {
     "rimraf": "^3.0.2",

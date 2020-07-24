@@ -1312,7 +1312,7 @@
     xterm "~4.2.0"
     xterm-addon-fit "~0.3.0"
 
-"@jupyterlab/theme-dark-extension@^3.0.0-alpha.4", "@jupyterlab/theme-dark-extension@~3.0.0-alpha.4":
+"@jupyterlab/theme-dark-extension@^3.0.0-alpha.4":
   version "3.0.0-alpha.4"
   resolved "https://registry.yarnpkg.com/@jupyterlab/theme-dark-extension/-/theme-dark-extension-3.0.0-alpha.4.tgz#82d4f6a4eeb622e5b092b18169b8b2464907cc6a"
   integrity sha512-PJdWP+ANnoIHmxE4Ny+tghVTzgenYh9Trf9PNwn7ME9wa7k3bxDWDhh0IhaU/ZnU22UPKGOcWoDs0/vVWKSbXA==

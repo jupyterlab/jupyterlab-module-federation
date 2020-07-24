@@ -1,0 +1,27 @@
+{
+  "name": "@jupyterlab/example-federated-theme",
+  "version": "3.0.0-alpha.4",
+  "description": "JupyterLab - Default Dark Theme",
+  "homepage": "https://github.com/jupyterlab/jupyterlab",
+  "bugs": {
+    "url": "https://github.com/jupyterlab/jupyterlab/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jupyterlab/jupyterlab.git"
+  },
+  "license": "BSD-3-Clause",
+  "author": "Project Jupyter",
+  "style": "style/index.css",
+  "dependencies": {
+    "@jupyterlab/application": "^3.0.0-alpha.4",
+    "@jupyterlab/apputils": "^3.0.0-alpha.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "jupyterlab": {
+    "extension": true,
+    "themePath": "style/index.css"
+  }
+}

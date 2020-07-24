@@ -356,7 +356,7 @@ class SettingsHandler(APIHandler):
         raw = self.request.body.strip().decode(u'utf-8')
 
         # Validate the data against the schema.
-        schema, _ = _get_schema(schemas_dir, schema_name, overrides, labextensions_path)
+        schema, _ = _get_schema(schemas_dir, schema_name, overrides, labextensions_path=self.labextensions_path)
         validator = Validator(schema)
         try:
             validator.validate(json5.loads(raw))

@@ -6,7 +6,7 @@
     "extension": {
       "type": ["boolean", "string"]
     },
-    "themePath": {
+    "relativePath": {
       "type": ["string", "null"]
     }
   },
@@ -26,7 +26,13 @@
     "themePath": {
       "title": "Theme path",
       "description": "The relative path to theme files",
-      "$ref": "#/definitions/themePath",
+      "$ref": "#/definitions/relativePath",
+      "default": null
+    },
+    "schemaDir": {
+      "title": "Schema directory",
+      "description": "The relative path to schema files",
+      "$ref": "#/definitions/relativePath",
       "default": null
     },
     "sharedPackages": {

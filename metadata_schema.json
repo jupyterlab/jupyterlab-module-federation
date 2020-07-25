@@ -1,0 +1,67 @@
+{
+  "title": "JupyterLab Package Metadata",
+  "version": "0.1.0",
+  "description": "JupyterLab package.json settings.",
+  "definitions": {
+    "extension": {
+      "type": ["boolean", "string"]
+    },
+    "themePath": {
+      "type": ["string", "null"]
+    }
+  },
+  "properties": {
+    "extension": {
+      "title": "Extension",
+      "description": "Presence of or relative path to a standard JupyterLab extension",
+      "$ref": "#/definitions/extension",
+      "default": false
+    },
+    "mimeExtension": {
+      "title": "Mime Extension",
+      "description": "Presence of or relative path to a JupyterLab MIME renderer extension",
+      "$ref": "#/definitions/extension",
+      "default": false
+    },
+    "themePath": {
+      "title": "Theme path",
+      "description": "The relative path to theme files",
+      "$ref": "#/definitions/themePath",
+      "default": null
+    },
+    "sharedPackages": {
+      "title": "Shared packages",
+      "description": "Packages that should be shared",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "nonSharedPackages": {
+      "title": "Non shared packages",
+      "description": "Packages that should not be shared",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "singletonPackages": {
+      "title": "Singletons packages",
+      "description": "Packages that should be singletons",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "nonSingleltonPackages": {
+      "title": "Non shared packages",
+      "description": "Packages that should not be singletons",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "type": "object"
+}

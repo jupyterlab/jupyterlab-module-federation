@@ -67,7 +67,6 @@ const phosphorAlias = {
 module.exports = {
   devtool: 'source-map',
   bail: true,
-  stats: 'verbose',
   mode: 'development',
   module: { rules },
   resolve: { alias: { url: false, buffer: false, ...phosphorAlias } },

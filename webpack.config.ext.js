@@ -8,6 +8,8 @@ const baseConfig = require('./webpack.config.base');
 const { ModuleFederationPlugin } = webpack.container;
 const path = require('path');
 const fs = require('fs');
+const Ajv = require('ajv');
+
 
 const packagePath = process.env.PACKAGE_PATH;
 let outputPath = process.env.OUTPUT_PATH;
@@ -18,6 +20,14 @@ if (nodeEnv === 'production') {
 }
 
 const data = require(path.join(packagePath, '/package.json'));
+
+const ajv = new Ajv();
+const validate = ajv.compile(require('./metadata_schema.json'));
+var valid = validate(data.jupyterlab || {});
+if (!valid) {
+  console.error(validate.errors);
+  process.exit(1);
+}
 
 outputPath = path.join(outputPath, data.name);
 

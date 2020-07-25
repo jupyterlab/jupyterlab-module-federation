@@ -12,6 +12,7 @@
     "clean": "rimraf labextensions"
   },
   "devDependencies": {
+    "ajv": "^6.12.3",
     "rimraf": "^3.0.2",
     "webpack": "5.0.0-beta.22",
     "webpack-cli": "^3.3.10",

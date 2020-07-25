@@ -18,7 +18,7 @@
       "default": false
     },
     "mimeExtension": {
-      "title": "Mime Extension",
+      "title": "Mime extension",
       "description": "Presence of or relative path to a JupyterLab MIME renderer extension",
       "$ref": "#/definitions/extension",
       "default": false
@@ -37,31 +37,31 @@
     },
     "sharedPackages": {
       "title": "Shared packages",
-      "description": "Packages that should be shared",
+      "description": "Packages that should be shared (in addition to core shared packages)",
       "type": "array",
       "items": {
         "type": "string"
       }
     },
     "nonSharedPackages": {
-      "title": "Non shared packages",
-      "description": "Packages that should not be shared",
+      "title": "Non-shared packages",
+      "description": "Packages that should not be shared (which can include core packages)",
       "type": "array",
       "items": {
         "type": "string"
       }
     },
     "singletonPackages": {
-      "title": "Singletons packages",
-      "description": "Packages that should be singletons",
+      "title": "Singleton packages",
+      "description": "Packages that should be singletons (in addition to core singleton packages)",
       "type": "array",
       "items": {
         "type": "string"
       }
     },
     "nonSingleltonPackages": {
-      "title": "Non shared packages",
-      "description": "Packages that should not be singletons",
+      "title": "Non-singleton packages",
+      "description": "Packages that should not be singletons (which can include core packages)",
       "type": "array",
       "items": {
         "type": "string"

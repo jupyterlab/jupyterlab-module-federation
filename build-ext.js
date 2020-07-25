@@ -24,6 +24,7 @@ commander
     .usage('[options] <path>')
     .option('--prod', 'build in prod mode (default is dev)')
     .option('--output <path>', 'Output path (default is `<path-to-package>/build`')
+    .option('--watch')
     .action(
         async (cmd) => {
             let node_env = 'development';
@@ -36,6 +37,9 @@ commander
             const webpack = require.resolve('webpack-cli');
 
             let cmdText = `${webpack} --config webpack.config.ext.js`;
+            if (cmd.watch) {
+                cmdText += ' --watch';
+            }
             const env = { OUTPUT_PATH: output, PACKAGE_PATH: packagePath, NODE_ENV: node_env };
             console.log(env);
             run(cmdText, { env: { ...process.env, ...env } });

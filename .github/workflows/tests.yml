@@ -2,43 +2,57 @@ name: Tests
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+
   pull_request:
-    branches: [ master ]
+    branches:
+      - "*"
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    name: ${{ matrix.PLATFORM }} py${{ matrix.PYTHON_VERSION }}
+    runs-on: ${{ matrix.PLATFORM }}
+    env:
+      CI: True
+      PYTHON_VERSION: ${{ matrix.PYTHON_VERSION }}
+    strategy:
+      fail-fast: false
+      matrix:
+        PYTHON_VERSION: ['3.6', '3.8']
+        PLATFORM: ['ubuntu-latest', 'windows-latest']
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Add conda to $PATH
-      run: echo ::add-path::$CONDA/condabin
-
-    - name: Update conda
-      run: conda update -y -n base conda setuptools
-
-    - name: Init conda
-      run: |
-        conda init bash
-        conda info -a
-    - name: Create the conda environment
-      run: |
-        conda create -n jupyterlab-module-federation --yes --quiet -c conda-forge nodejs jupyterlab
-      env:
-        PYTHON_VERSION: '3.8'
-
-    - name: Build and install
-      run: |
-        source "$CONDA/etc/profile.d/conda.sh"
-        conda activate jupyterlab-module-federation
-        jlpm && jlpm run build
-
-    - name: Browser check
-      run: |
-        source "$CONDA/etc/profile.d/conda.sh"
-        conda activate jupyterlab-module-federation
-        pip install jupyterlab==2.1.5
-        python run.py
-
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache pip
+        uses: actions/cache@v1
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-py-${{ matrix.PYTHON_VERSION }}-pip-${{ hashFiles('**/setup.py') }}
+      # Cache yarn
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Cache yarn
+        uses: actions/cache@v1
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Setup python
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.PYTHON_VERSION }}
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Install python dependencies
+        run: |
+          pip install setuptools pip --upgrade
+          pip install -v -e ".[test]"
+          jlpm && jlpm run build
+      - name: Browser check
+        run: python run.py

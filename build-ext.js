@@ -34,9 +34,9 @@ commander
             const packagePath = path.resolve(cmd.args[0]);
             const output = cmd.output || path.join(__dirname, 'labextensions');
 
-            const webpack = require.resolve('webpack-cli');
+            const webpack = require.resolve('webpack-cli/bin/cli.js');
 
-            let cmdText = `${webpack} --config webpack.config.ext.js`;
+            let cmdText = `node ${webpack} --config webpack.config.ext.js`;
             if (cmd.watch) {
                 cmdText += ' --watch';
             }

@@ -34,6 +34,10 @@ class ExampleApp(LabServerApp):
         help="""extra paths to look for Javascript notebook extensions"""
     )
 
+    disabled_labextensions = List({}, config=True,
+        help=(_("List of disabled lab extensions by module name or extension pattern"))
+    )
+
     lab_config = LabConfig(
         app_name = 'JupyterLab Example Federated App',
         app_settings_dir = os.path.join(HERE, 'build', 'application_settings'),
@@ -54,9 +58,6 @@ class ExampleApp(LabServerApp):
         web_app = self.web_app
         base_url = web_app.settings['base_url']
         handlers = []
-
-        # Temporary addition for testing
-        self.extra_labextensions_path += [os.path.join(HERE, 'labextensions')]
 
         labextensions_path = self.extra_labextensions_path + jupyter_path('labextensions')
         labextensions_url = ujoin(base_url, "example", r"labextensions/(.*)")

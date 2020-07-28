@@ -54,5 +54,8 @@ jobs:
           pip install setuptools pip --upgrade
           pip install -v -e ".[test]"
           jlpm && jlpm run build
+          python labextension develop md_package
+          python labextension develop middle_package
+          python labextension develop theme_package
       - name: Browser check
         run: python run.py

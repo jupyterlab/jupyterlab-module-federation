@@ -1,4 +1,4 @@
-# juptyerlab-module-federation
+# jupyterlab-module-federation
 
 This repository is a temporary playground for implementing a new JupyterLab extension
 system that utilizes the Module Federation capabilities in WebPack 5.

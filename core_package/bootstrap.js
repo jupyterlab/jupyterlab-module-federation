@@ -55,20 +55,52 @@ window.addEventListener('load', async function() {
   const mods = [
     require('@jupyterlab/application-extension'),
     require('@jupyterlab/apputils-extension'),
+    require('@jupyterlab/celltags-extension'),
     require('@jupyterlab/codemirror-extension'),
+    require('@jupyterlab/completer-extension'),
+    require('@jupyterlab/console-extension'),
+    require('@jupyterlab/csvviewer-extension'),
     require('@jupyterlab/docmanager-extension'),
-    require('@jupyterlab/fileeditor-extension'),
+    require('@jupyterlab/documentsearch-extension'),
+    require('@jupyterlab/extensionmanager-extension'),
     require('@jupyterlab/filebrowser-extension'),
+    require('@jupyterlab/fileeditor-extension'),
     require('@jupyterlab/help-extension'),
+    require('@jupyterlab/htmlviewer-extension'),
+    require('@jupyterlab/hub-extension'),
     require('@jupyterlab/imageviewer-extension'),
+    require('@jupyterlab/inspector-extension'),
+    require('@jupyterlab/launcher-extension'),
+    require('@jupyterlab/logconsole-extension'),
     require('@jupyterlab/mainmenu-extension'),
+    require('@jupyterlab/markdownviewer-extension'),
+    require('@jupyterlab/mathjax2-extension'),
+    require('@jupyterlab/notebook-extension'),
     require('@jupyterlab/rendermime-extension'),
+    require('@jupyterlab/running-extension'),
+    require('@jupyterlab/settingeditor-extension'),
     require('@jupyterlab/shortcuts-extension'),
+    require('@jupyterlab/statusbar-extension'),
+    require('@jupyterlab/tabmanager-extension'),
+    require('@jupyterlab/terminal-extension'),
+    require('@jupyterlab/theme-dark-extension'),
     require('@jupyterlab/theme-light-extension'),
+    require('@jupyterlab/toc-extension'),
+    require('@jupyterlab/tooltip-extension'),
     require('@jupyterlab/ui-components-extension'),
+    require('@jupyterlab/vdom-extension'),
     ...plugins
   ];
-  const lab = new JupyterLab();
+
+  const mimeExtensions = [
+    require('@jupyterlab/javascript-extension'),
+    require('@jupyterlab/json-extension'),
+    require('@jupyterlab/pdf-extension'),
+    require('@jupyterlab/vega5-extension')
+  ];
+  const lab = new JupyterLab({
+    mimeExtensions
+  });
   lab.registerPluginModules(mods);
   /* eslint-disable no-console */
   console.log('Starting app');
@@ -77,3 +109,4 @@ window.addEventListener('load', async function() {
   await lab.restored;
   console.log('Example started!');
 });
+

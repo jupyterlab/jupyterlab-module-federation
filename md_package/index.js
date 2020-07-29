@@ -17,14 +17,14 @@ var CommandIDs;
 /**
  * The name of the factory that creates markdown viewer widgets.
  */
-const FACTORY = 'Markdown Preview';
+const FACTORY = 'FEDERATED Markdown Preview';
 /**
  * The markdown viewer plugin.
  */
 const plugin = {
     activate,
-    id: '@jupyterlab/example-federated-md:plugin',
-    provides: IMarkdownViewerTracker,
+    id: '@jupyterlab/federated-markdownviewer-extension:plugin',
+    // provides: IMarkdownViewerTracker,
     requires: [ILayoutRestorer, IRenderMimeRegistry, ISettingRegistry],
     autoStart: true
 };
@@ -36,7 +36,7 @@ function activate(app, restorer, rendermime, settingRegistry, middleToken) {
 
     // Add the markdown renderer factory.
     rendermime.addFactory(markdownRendererFactory);
-    const namespace = 'markdownviewer-widget';
+    const namespace = 'federated-markdownviewer-widget';
     const tracker = new WidgetTracker({
         namespace
     });
@@ -96,7 +96,7 @@ function activate(app, restorer, rendermime, settingRegistry, middleToken) {
         name: widget => widget.context.path
     });
     commands.addCommand(CommandIDs.markdownPreview, {
-        label: 'Markdown Preview',
+        label: 'Federated Markdown Preview',
         execute: args => {
             const path = args['path'];
             if (typeof path !== 'string') {
@@ -134,7 +134,7 @@ function activate(app, restorer, rendermime, settingRegistry, middleToken) {
         command: CommandIDs.markdownEditor,
         selector: '.jp-RenderedMarkdown'
     });
-    return tracker;
+    // return tracker;
 }
 /**
  * Export the plugin as default.

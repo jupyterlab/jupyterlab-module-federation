@@ -25,10 +25,9 @@ with open(os.path.join(HERE, 'package.json')) as fid:
     version = json.load(fid)['version']
 
 
-class LabApp(LabServerApp):
-    name = 'lab'
+class ExampleApp(LabServerApp):
     base_url = '/foo'
-    default_url = Unicode('/lab',
+    default_url = Unicode('/example',
                           help='The default URL to redirect to from `/`')
 
     extra_labextensions_path = List(Unicode(), config=True,
@@ -39,7 +38,7 @@ class LabApp(LabServerApp):
         app_name = 'JupyterLab Federated App',
         app_settings_dir = os.path.join(HERE, 'build', 'application_settings'),
         app_version = version,
-        app_url = '/lab',
+        app_url = '/example',
         schemas_dir = os.path.join(HERE, 'core_package', 'build', 'schemas'),
         static_dir = os.path.join(HERE, 'core_package', 'build'),
         templates_dir = os.path.join(HERE, 'templates'),
@@ -57,7 +56,7 @@ class LabApp(LabServerApp):
         handlers = []
 
         labextensions_path = self.extra_labextensions_path + jupyter_path('labextensions')
-        labextensions_url = ujoin(base_url, "lab", r"labextensions/(.*)")
+        labextensions_url = ujoin(base_url, "example", r"labextensions/(.*)")
         handlers.append(
             (labextensions_url, FileFindHandler, {
                 'path': labextensions_path,
@@ -65,7 +64,7 @@ class LabApp(LabServerApp):
             }))
 
         # Handle requests for the list of settings. Make slash optional.
-        settings_path = ujoin(base_url, 'lab', 'api', 'settings')
+        settings_path = ujoin(base_url, 'example', 'api', 'settings')
         settings_config = {
             'app_settings_dir': self.lab_config.app_settings_dir,
             'schemas_dir': self.lab_config.schemas_dir,
@@ -81,7 +80,7 @@ class LabApp(LabServerApp):
         handlers.append((setting_path, SettingsHandler, settings_config))
 
         # Handle requests for themes
-        themes_path = ujoin(base_url, 'lab', 'api', 'themes', '(.*)')
+        themes_path = ujoin(base_url, 'example', 'api', 'themes', '(.*)')
         handlers.append((
             themes_path,
             ThemesHandler,
@@ -104,4 +103,4 @@ class LabApp(LabServerApp):
         super().start()
 
 if __name__ == '__main__':
-    LabApp.launch_instance()
+    ExampleApp.launch_instance()

@@ -295,6 +295,12 @@ def watch_dev(logger=None):
     return package_procs + [wp_proc]
 
 
+def get_page_config():
+    """Get the page config for the application"""
+    cm = ConfigManager()
+    return cm.get('page_config')
+
+
 class AppOptions(HasTraits):
     """Options object for build system"""
 
@@ -983,8 +989,7 @@ class _AppHandler(object):
 
         Returns `True` if a rebuild is recommended, `False` otherwise.
         """
-        cm = ConfigManager()
-        page_config = cm.get('page_config')
+        page_config = get_page_config()
         disabled = page_config.get('disabled_labextensions', {})
         did_something = False
         if value and extension not in disabled:
@@ -1061,8 +1066,7 @@ class _AppHandler(object):
         info['core_data'] = core_data = self.core_data
         info['extensions'] = extensions = self._get_extensions(core_data)
 
-        cm = ConfigManager()
-        info['disabled'] = list(cm.get('page_config').get('disabled_labextensions', {}))
+        info['disabled'] = list(get_page_config().get('disabled_labextensions', {}))
         info['local_extensions'] = self._get_local_extensions()
         info['linked_packages'] = self._get_linked_packages()
         info['app_extensions'] = app = []

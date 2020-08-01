@@ -35,10 +35,6 @@ class LabApp(LabServerApp):
         help="""extra paths to look for Javascript notebook extensions"""
     )
 
-    disabled_labextensions = List({}, config=True,
-        help=(_("List of disabled lab extensions by module name or extension pattern"))
-    )
-
     lab_config = LabConfig(
         app_name = 'JupyterLab Federated App',
         app_settings_dir = os.path.join(HERE, 'build', 'application_settings'),

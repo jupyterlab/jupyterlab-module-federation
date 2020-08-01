@@ -34,6 +34,7 @@ from jupyterlab.semver import Range, gte, lt, lte, gt, make_semver
 from jupyterlab.jlpmapp import YARN_PATH, HERE
 from jupyterlab.coreconfig import _get_default_core_data, CoreConfig
 
+from manager import ConfigManager
 
 # The regex for expecting the webpack output.
 WEBPACK_EXPECT = re.compile(r'.*/index.out.js')
@@ -982,17 +983,19 @@ class _AppHandler(object):
 
         Returns `True` if a rebuild is recommended, `False` otherwise.
         """
-        config = self._read_page_config()
-        disabled = config.setdefault('disabledExtensions', [])
+        cm = ConfigManager()
+        page_config = cm.get('page_config')
+        disabled = page_config.get('disabled_labextensions', {})
         did_something = False
         if value and extension not in disabled:
-            disabled.append(extension)
+            disabled[extension] = True
             did_something = True
         elif not value and extension in disabled:
-            disabled.remove(extension)
+            del disabled[extension]
             did_something = True
         if did_something:
-            self._write_page_config(config)
+            page_config['disabled_labextensions'] = disabled
+            cm.set('page_config', page_config)
         return did_something
 
     def check_extension(self, extension, check_installed_only=False):
@@ -1057,8 +1060,9 @@ class _AppHandler(object):
         info = dict()
         info['core_data'] = core_data = self.core_data
         info['extensions'] = extensions = self._get_extensions(core_data)
-        page_config = self._read_page_config()
-        info['disabled'] = page_config.get('disabledExtensions', [])
+
+        cm = ConfigManager()
+        info['disabled'] = list(cm.get('page_config').get('disabled_labextensions', {}))
         info['local_extensions'] = self._get_local_extensions()
         info['linked_packages'] = self._get_linked_packages()
         info['app_extensions'] = app = []
@@ -1534,24 +1538,6 @@ class _AppHandler(object):
         """
         self._ensure_app_dirs()
         target = pjoin(self.app_dir, 'settings', 'build_config.json')
-        with open(target, 'w') as fid:
-            json.dump(config, fid, indent=4)
-
-    def _read_page_config(self):
-        """Get the page config data for the app dir.
-        """
-        target = pjoin(self.app_dir, 'settings', 'page_config.json')
-        if not osp.exists(target):
-            return {}
-        else:
-            with open(target) as fid:
-                return json.load(fid)
-
-    def _write_page_config(self, config):
-        """Write the build config to the app dir.
-        """
-        self._ensure_app_dirs()
-        target = pjoin(self.app_dir, 'settings', 'page_config.json')
         with open(target, 'w') as fid:
             json.dump(config, fid, indent=4)
 

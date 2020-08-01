@@ -258,7 +258,6 @@ class ListLabExtensionsApp(BaseExtensionApp):
     description = "List the installed labextensions"
 
     def run_task(self):
-        # TODO in commands: get the dynamic list first, and do not include those in the core list
         list_extensions(app_options=AppOptions(
             app_dir=self.app_dir, logger=self.log, core_config=self.core_config))
 
@@ -267,7 +266,6 @@ class EnableLabExtensionsApp(BaseExtensionApp):
     description = "Enable labextension(s) by name"
 
     def run_task(self):
-        # TODO: in commands: use traitlets instead of page_config for this
         app_options = AppOptions(
             app_dir=self.app_dir, logger=self.log, core_config=self.core_config)
         [enable_extension(arg, app_options=app_options) for arg in self.extra_args]
@@ -277,7 +275,6 @@ class DisableLabExtensionsApp(BaseExtensionApp):
     description = "Disable labextension(s) by name"
 
     def run_task(self):
-        # TODO: in commands: use traitlets instead of page_config for this
         app_options = AppOptions(
             app_dir=self.app_dir, logger=self.log, core_config=self.core_config)
         [disable_extension(arg, app_options=app_options) for arg in self.extra_args]

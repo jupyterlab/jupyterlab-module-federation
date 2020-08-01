@@ -83,7 +83,6 @@ window.addEventListener('load', async function() {
     require('@jupyterlab/statusbar-extension'),
     require('@jupyterlab/tabmanager-extension'),
     require('@jupyterlab/terminal-extension'),
-    require('@jupyterlab/theme-dark-extension'),
     require('@jupyterlab/theme-light-extension'),
     require('@jupyterlab/toc-extension'),
     require('@jupyterlab/tooltip-extension'),

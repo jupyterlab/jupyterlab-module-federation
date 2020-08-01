@@ -26,6 +26,7 @@
   "jupyterlab": {
     "extension": true,
     "schemaDir": "schema",
+    "outputDir": "static",
     "singletonPackages": ["@jupyterlab/example-federated-middle"]
   }
 }

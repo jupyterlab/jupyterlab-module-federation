@@ -35,7 +35,7 @@ class ExampleApp(LabServerApp):
     )
 
     lab_config = LabConfig(
-        app_name = 'JupyterLab Example Federated App',
+        app_name = 'JupyterLab Federated App',
         app_settings_dir = os.path.join(HERE, 'build', 'application_settings'),
         app_version = version,
         app_url = '/example',
@@ -54,9 +54,6 @@ class ExampleApp(LabServerApp):
         web_app = self.web_app
         base_url = web_app.settings['base_url']
         handlers = []
-
-        # Temporary addition for testing
-        self.extra_labextensions_path += [os.path.join(HERE, 'labextensions')]
 
         labextensions_path = self.extra_labextensions_path + jupyter_path('labextensions')
         labextensions_url = ujoin(base_url, "example", r"labextensions/(.*)")

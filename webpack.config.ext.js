@@ -11,17 +11,13 @@ const fs = require('fs');
 const Ajv = require('ajv');
 
 
-console.log('1');
-
 const packagePath = process.env.PACKAGE_PATH;
-let outputPath = process.env.OUTPUT_PATH;
 const nodeEnv = process.env.NODE_ENV;
 
 if (nodeEnv === 'production') {
   options.mode = 'production'
 }
 
-console.log('2');
 const data = require(path.join(packagePath, '/package.json'));
 
 const ajv = new Ajv({ useDefaults: true });
@@ -32,8 +28,8 @@ if (!valid) {
   process.exit(1);
 }
 
-console.log('3');
-outputPath = path.join(outputPath, data.name);
+let outputPath = data.jupyterlab['outputDir'];
+outputPath = path.join(packagePath, outputPath);
 
 // Handle the extension entry point and the lib entry point, if different
 let extEntry = data.jupyterlab.extension || data.jupyterlab.mimeExtension;
@@ -51,7 +47,6 @@ const coreData = require('./core_package/package.json');
 
 const shared = {};
 
-console.log('4');
 // Start with core dependencies.
 Object.keys(coreData.dependencies).forEach((element) => {
   shared[element] = { requiredVersion: coreData.dependencies[element] };
@@ -95,25 +90,21 @@ coreData.jupyterlab.singletonPackages.forEach((element) => {
   shared[element].singleton = false;
 });
 
-console.log('5');
-
 // Ensure a clean output directory.
 fs.rmdirSync(outputPath, { recursive: true });
 fs.mkdirSync(outputPath, { recursive: true });
 
-console.log('6');
 const extras = Build.ensureAssets({
   packageNames: [data.name],
   output: outputPath
 });
 
-console.log('7');
+fs.copyFileSync(path.join(packagePath, 'package.json'), path.join(outputPath, 'package.orig.json'))
+
 // Make a bootstrap entrypoint
 const entryPoint = path.join(outputPath, 'bootstrap.js');
 const bootstrap = 'import("' + exposes['./extension'] + '");'
 fs.writeFileSync(entryPoint, bootstrap);
-
-console.log('8');
 
 module.exports = [
   merge(baseConfig, {
@@ -138,7 +129,5 @@ module.exports = [
   })
 ].concat(extras);
 
-console.log('9');
 const logPath = path.join(outputPath, 'build_log.json');
 fs.writeFileSync(logPath, JSON.stringify(module.exports, null, '  '));
-console.log('10');

@@ -12,9 +12,7 @@ Prereqs: `python 3.5+` and `nodejs`
 To build:
 
 ```
-pip install setuptools pip --upgrade
-pip install -v -e ".[test]"
-jlpm && jlpm run build
+bash install.sh
 ```
 
 To run:

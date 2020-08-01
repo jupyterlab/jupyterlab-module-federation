@@ -4,3 +4,4 @@ core_package/build
 md_package/build
 labextensions
 *.pyc
+static

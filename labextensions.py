@@ -26,7 +26,7 @@ from commands import (
 from jupyterlab.coreconfig import CoreConfig
 from jupyterlab.debuglog import DebugLogFileMixin
 
-from dynamic_labextensions import develop_labextension
+from dynamic_labextensions import develop_labextension_py
 
 
 flags = dict(base_flags)
@@ -169,7 +169,7 @@ class DevelopLabExtensionApp(BaseExtensionApp):
         "Add config for this labextension"
         self.extra_args = self.extra_args or [os.getcwd()]
         for arg in self.extra_args:
-            develop_labextension(arg, user=self.user, sys_prefix=self.sys_prefix, labextensions_dir=self.labextensions_dir, logger=self.log)
+            develop_labextension_py(arg, user=self.user, sys_prefix=self.sys_prefix, labextensions_dir=self.labextensions_dir, logger=self.log)
 
 
 class UpdateLabExtensionApp(BaseExtensionApp):

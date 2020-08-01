@@ -134,7 +134,6 @@ def develop_labextension_py(module, user=False, sys_prefix=False, overwrite=Fals
     for labext in labexts:
         src = os.path.join(base_path, labext['src'])
         dest = labext['dest']
-
         if logger:
             logger.info("Installing %s -> %s" % (src, dest))
         full_dest = develop_labextension(
@@ -196,23 +195,6 @@ def _maybe_copy(src, dest, logger=None):
         if logger:
             logger.info("Copying: %s -> %s" % (src, dest))
         shutil.copy2(src, dest)
-
-
-def _safe_is_tarfile(path):
-    """Safe version of is_tarfile, return False on IOError.
-
-    Returns whether the file exists and is a tarfile.
-
-    Parameters
-    ----------
-
-    path : string
-        A path that might not exist and or be a tarfile
-    """
-    try:
-        return tarfile.is_tarfile(path)
-    except IOError:
-        return False
 
 
 def _get_labextension_dir(user=False, sys_prefix=False, prefix=None, labextensions_dir=None):

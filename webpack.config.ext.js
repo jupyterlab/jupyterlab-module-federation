@@ -99,6 +99,8 @@ const extras = Build.ensureAssets({
   output: outputPath
 });
 
+fs.copyFileSync(path.join(packagePath, 'package.json'), path.join(outputPath, 'package.orig.json'))
+
 // Make a bootstrap entrypoint
 const entryPoint = path.join(outputPath, 'bootstrap.js');
 const bootstrap = 'import("' + exposes['./extension'] + '");'

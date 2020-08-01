@@ -11,8 +11,8 @@ import { PathExt } from '@jupyterlab/coreutils';
  */
 var CommandIDs;
 (function (CommandIDs) {
-    CommandIDs.markdownPreview = 'markdownviewer:open';
-    CommandIDs.markdownEditor = 'markdownviewer:edit';
+    CommandIDs.markdownPreview = 'markdownviewer-federated:open';
+    CommandIDs.markdownEditor = 'markdownviewer-federated:edit';
 })(CommandIDs || (CommandIDs = {}));
 /**
  * The name of the factory that creates markdown viewer widgets.
@@ -23,7 +23,7 @@ const FACTORY = 'FEDERATED Markdown Preview';
  */
 const plugin = {
     activate,
-    id: '@jupyterlab/federated-markdownviewer-extension:plugin',
+    id: '@jupyterlab/example-federated-md:plugin',
     // provides: IMarkdownViewerTracker,
     requires: [ILayoutRestorer, IRenderMimeRegistry, ISettingRegistry],
     autoStart: true

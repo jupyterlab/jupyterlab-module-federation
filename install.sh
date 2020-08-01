@@ -2,7 +2,7 @@
 set -ex
 set -o pipefail
 
-pip install setuptools pip --upgrade
+pip install --user setuptools pip --upgrade
 pip install -v -e ".[test]"
 jlpm && jlpm run build
 pip install -e ./md_package

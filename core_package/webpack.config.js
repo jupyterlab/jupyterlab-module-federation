@@ -97,7 +97,7 @@ module.exports = [
         },
         name: 'CORE_FEDERATION',
         shared: {
-          ...data.dependencies,
+          ...data.resolutions,
           ...singletons
         }
       })

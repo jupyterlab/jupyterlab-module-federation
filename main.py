@@ -8,7 +8,7 @@ from jupyterlab_server.server import FileFindHandler, APIHandler
 from notebook.utils import url_path_join as ujoin, url_escape
 import json
 import os
-from traitlets import Unicode, List
+from traitlets import Unicode, List, Bool
 
 from tornado.web import StaticFileHandler
 
@@ -34,17 +34,19 @@ class ExampleApp(LabServerApp):
         help="""extra paths to look for Javascript notebook extensions"""
     )
 
+    browser_test = Bool(False, config=True)
+
     lab_config = LabConfig(
         app_name = 'JupyterLab Federated App',
         app_settings_dir = os.path.join(HERE, 'build', 'application_settings'),
         app_version = version,
         app_url = '/example',
-        schemas_dir = os.path.join(HERE, 'core_package', 'build', 'schemas'),
-        static_dir = os.path.join(HERE, 'core_package', 'build'),
+        schemas_dir = os.path.join(HERE, 'core_package', 'static', 'schemas'),
+        static_dir = os.path.join(HERE, 'core_package', 'static'),
         templates_dir = os.path.join(HERE, 'templates'),
-        themes_dir = os.path.join(HERE, 'core_package', 'build', 'themes'),
-        user_settings_dir = os.path.join(HERE, 'core_package', 'build', 'user_settings'),
-        workspaces_dir = os.path.join(HERE, 'core_package', 'build', 'workspaces'),
+        themes_dir = os.path.join(HERE, 'core_package', 'static', 'themes'),
+        user_settings_dir = os.path.join(HERE, 'core_package', 'static', 'user_settings'),
+        workspaces_dir = os.path.join(HERE, 'core_package', 'static', 'workspaces'),
     )
 
     def init_webapp(self):
@@ -53,6 +55,12 @@ class ExampleApp(LabServerApp):
         # Handle labextension assets
         web_app = self.web_app
         base_url = web_app.settings['base_url']
+        page_config = web_app.settings.get('page_config_data', {})
+        web_app.settings['page_config_data'] = page_config
+
+        if self.browser_test:
+            page_config['browserTest'] = True
+
         handlers = []
 
         labextensions_path = self.extra_labextensions_path + jupyter_path('labextensions')

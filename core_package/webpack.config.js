@@ -6,16 +6,27 @@ const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const baseConfig = require('../webpack.config.base');
 const { ModuleFederationPlugin } = webpack.container;
+const fs = require('fs-extra');
 const path = require('path');
+const Handlebars = require('handlebars');
 
 const names = Object.keys(data.dependencies).filter(function(name) {
   const packageData = require(name + '/package.json');
   return packageData.jupyterlab !== undefined;
 });
 
+const jlab = data.jupyterlab;
+
+// Ensure a clear build directory.
+const buildDir = path.resolve(jlab.buildDir);
+if (fs.existsSync(buildDir)) {
+  fs.removeSync(buildDir);
+}
+fs.ensureDirSync(buildDir);
+
 const extras = Build.ensureAssets({
   packageNames: names,
-  output: './build'
+  output: jlab.outputDir
 });
 
 // TODO: make options configurable
@@ -26,11 +37,51 @@ data.jupyterlab.singletonPackages.forEach(element => {
   singletons[element] = { singleton: true }
 });
 
+// Handle the extensions.
+const extensions = jlab.extensions || {};
+const mimeExtensions = jlab.mimeExtensions || {};
+const externalExtensions = jlab.externalExtensions || {};
+const packageNames = Object.keys(mimeExtensions).concat(
+  Object.keys(extensions),
+  Object.keys(externalExtensions)
+);
+
+// go throught each external extension
+// add to mapping of extension and mime extensions, of package name
+// to path of the extension.
+for (const key in externalExtensions) {
+  const {
+    jupyterlab: { extension, mimeExtension }
+  } = require(`${key}/package.json`);
+  if (extension !== undefined) {
+    extensions[key] = extension === true ? '' : extension;
+  }
+  if (mimeExtension !== undefined) {
+    mimeExtensions[key] = mimeExtension === true ? '' : mimeExtension;
+  }
+}
+
+// Create the entry point file.
+const source = fs.readFileSync('index.js').toString();
+const template = Handlebars.compile(source);
+const extData = {
+  jupyterlab_extensions: extensions,
+  jupyterlab_mime_extensions: mimeExtensions
+};
+const result = template(extData);
+
+fs.writeFileSync(path.join(buildDir, 'index.out.js'), result);
+
+// Make a bootstrap entrypoint
+const entryPoint = path.join(buildDir, 'bootstrap.js');
+const bootstrap = 'import("./index.out.js");'
+fs.writeFileSync(entryPoint, bootstrap);
+
 module.exports = [
   merge(baseConfig, {
-    entry: './index.js',
+    entry: entryPoint,
     output: {
-      path: path.resolve(__dirname, 'build'),
+      path: path.resolve(jlab.outputDir),
       library: {
         type: 'var',
         name: ['_JUPYTERLAB', 'CORE_OUTPUT']

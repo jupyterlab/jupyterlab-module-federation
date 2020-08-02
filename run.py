@@ -40,6 +40,7 @@ def main():
         default_url = '/example'
         base_url = '/foo'
         ip = '127.0.0.1'
+        browser_test = True
 
         def start(self):
             run_test(self, run_browser)
@@ -57,8 +58,8 @@ def run_browser(url):
         os.makedirs(target)
         subprocess.call(["jlpm", "init", "-y"], cwd=target)
         subprocess.call(["jlpm", "add", "puppeteer@^2"], cwd=target)
-    shutil.copy(osp.join(here, 'chrome-example-test.js'), osp.join(target, 'chrome-example-test.js'))
-    return subprocess.check_call(["node", "chrome-example-test.js", url], cwd=target)
+    shutil.copy(osp.join(here, 'chrome-test.js'), osp.join(target, 'chrome-test.js'))
+    return subprocess.check_call(["node", "chrome-test.js", url], cwd=target)
 
 
 if __name__ == '__main__':

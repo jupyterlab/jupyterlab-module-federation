@@ -3,8 +3,11 @@
 
 // This is all the data needed to load and activate plugins. This should be
 // gathered by the server and put onto the initial page template.
-const PLUGIN_DATA = JSON.parse(
-  document.getElementById('jupyterlab-plugin-data').textContent
+const EXTENSION_DATA = JSON.parse(
+  document.getElementById('jupyterlab-extension-data').textContent
+);
+const MIME_EXTENSION_DATA = JSON.parse(
+  document.getElementById('jupyterlab-mimeextension-data').textContent
 );
 
 import { PageConfig } from '@jupyterlab/coreutils';
@@ -51,8 +54,7 @@ async function main() {
 
   // Get dynamic plugins
   // TODO: deconflict these with builtins?
-  // TODO: how to handle dynamic mime extensions?
-  const dynamicPromises = PLUGIN_DATA.map(data =>
+  const dynamicPromises = EXTENSION_DATA.map(data =>
     loadComponent(
       `${PageConfig.getBaseUrl()}/${data.path}`,
       data.name,
@@ -60,6 +62,15 @@ async function main() {
     )
   );
   const dynamicPlugins = await Promise.all(dynamicPromises);
+
+  const dynamicMimePromises = MIME_EXTENSION_DATA.map(data =>
+    loadComponent(
+      `${PageConfig.getBaseUrl()}/${data.path}`,
+      data.name,
+      data.module
+    )
+  );
+  const dynamicMimePlugins = await Promise.all(dynamicMimePromises);
 
   // Handle the registered mime extensions.
   var mimeExtensions = [];
@@ -93,6 +104,9 @@ async function main() {
   }
   {{/each}}
 
+  // Add the dyanmic mime extensions.
+  dynamicMimePlugins.forEach(plugin => { mimeExtensions.push(plugin); });
+
   // Handled the registered standard extensions.
   {{#each jupyterlab_extensions}}
   try {
@@ -121,6 +135,7 @@ async function main() {
   }
   {{/each}}
 
+  // Add the dynamic extensions.
   dynamicPlugins.forEach(plugin => { register.push(plugin) });
 
   var lab = new JupyterLab({

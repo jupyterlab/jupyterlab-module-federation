@@ -3,8 +3,9 @@
   "version": "2.1.0",
   "private": true,
   "scripts": {
-    "build": "npm run build:core && npm run build:middle && npm run build:md && npm run build:theme",
+    "build": "npm run build:core && npm run build:json && npm run build:middle && npm run build:md && npm run build:theme",
     "build:core": "cd core_package && npm run build",
+    "build:json": "node build-ext.js ./json_package",
     "build:middle": "node build-ext.js ./middle_package",
     "build:md": "node build-ext.js ./md_package",
     "build:theme": "node build-ext.js ./theme_package",

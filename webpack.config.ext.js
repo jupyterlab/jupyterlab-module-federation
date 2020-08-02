@@ -112,7 +112,7 @@ module.exports = [
     output: {
       filename: 'extension.js',
       path: outputPath,
-      publicPath: `example/labextensions/${data.name}/`,
+      publicPath: `lab/extensions/${data.name}/`,
     },
     plugins: [
       new ModuleFederationPlugin({

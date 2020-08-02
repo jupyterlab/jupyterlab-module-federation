@@ -1,15 +1,6 @@
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
 
-// This is all the data needed to load and activate plugins. This should be
-// gathered by the server and put onto the initial page template.
-const EXTENSION_DATA = JSON.parse(
-  document.getElementById('jupyterlab-extension-data').textContent
-);
-const MIME_EXTENSION_DATA = JSON.parse(
-  document.getElementById('jupyterlab-mimeextension-data').textContent
-);
-
 import { PageConfig } from '@jupyterlab/coreutils';
 
 // This must be after the public path is set.
@@ -52,20 +43,29 @@ async function main() {
   var ignorePlugins = [];
   var register = [];
 
+  // This is all the data needed to load and activate plugins. This should be
+  // gathered by the server and put onto the initial page template.
+  const extension_data = JSON.parse(
+    PageConfig.getOption('dynamic_extensions')
+  );
+  const mime_extension_data = JSON.parse(
+    PageConfig.getOption('dynamic_mime_extensions')
+  );
+
   // Get dynamic plugins
   // TODO: deconflict these with builtins?
-  const dynamicPromises = EXTENSION_DATA.map(data =>
+  const dynamicPromises = extension_data.map(data =>
     loadComponent(
-      `${PageConfig.getBaseUrl()}/${data.path}`,
+      data.path,
       data.name,
       data.module
     )
   );
   const dynamicPlugins = await Promise.all(dynamicPromises);
 
-  const dynamicMimePromises = MIME_EXTENSION_DATA.map(data =>
+  const dynamicMimePromises = mime_extension_data.map(data =>
     loadComponent(
-      `${PageConfig.getBaseUrl()}/${data.path}`,
+      data.path,
       data.name,
       data.module
     )

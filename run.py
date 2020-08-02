@@ -37,7 +37,6 @@ def main():
         JS console errors, JS errors, and Python logged errors.
         """
         open_browser = Bool(False)
-        default_url = '/example'
         base_url = '/foo'
         ip = '127.0.0.1'
         browser_test = True

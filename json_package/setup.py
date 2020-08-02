@@ -1,7 +1,7 @@
 import json
 import os.path as osp
 
-name = 'md_package'
+name = 'json_package'
 HERE = osp.abspath(osp.dirname(__file__))
 
 with open(osp.join(HERE, 'package.json')) as fid:

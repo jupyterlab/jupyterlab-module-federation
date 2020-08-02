@@ -14,16 +14,6 @@
         {{ page_config_full | tojson }}
       </script>
 
-    <!-- This data should be gathered by the server and templated here or as part of the page config -->
-    <script id="jupyterlab-extension-data" type="application/json">
-      [{"path":"example/labextensions/@jupyterlab/example-federated-md/remoteEntry.js","name":"@jupyterlab/example-federated-md","module":"./extension"},
-      {"path": "example/labextensions/@jupyterlab/example-federated-middle/remoteEntry.js","name":"@jupyterlab/example-federated-middle","module":"./extension"},
-      {"path": "example/labextensions/@jupyterlab/example-federated-theme/remoteEntry.js","name":"@jupyterlab/example-federated-theme","module":"./extension"}]
-    </script>
-
-    <script id="jupyterlab-mimeextension-data" type="application/json">
-      [{"path":"example/labextensions/@jupyterlab/json-federated-extension/remoteEntry.js","name":"@jupyterlab/json-federated-extension","module":"./extension"}]
-    </script>
 
 <script src="{{page_config['fullStaticUrl'] | e}}/bundle.js"></script>
 

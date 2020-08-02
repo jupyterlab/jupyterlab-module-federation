@@ -87,8 +87,7 @@ module.exports = [
         name: ['_JUPYTERLAB', 'CORE_OUTPUT']
       },
       filename: 'bundle.js',
-      // TODO: make this part of config so it can be different for other apps.
-      publicPath: 'static/example/'
+      publicPath: 'static/lab/'
     },
     plugins: [
       new ModuleFederationPlugin({

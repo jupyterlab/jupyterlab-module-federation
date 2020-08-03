@@ -88,6 +88,7 @@ def develop_labextension(path, symlink=True, overwrite=False,
     if not destination:
         destination = basename(normpath(path))
     destination = cast_unicode_py2(destination)
+
     full_dest = normpath(pjoin(labext, destination))
     if overwrite and os.path.lexists(full_dest):
         if logger:
@@ -96,6 +97,9 @@ def develop_labextension(path, symlink=True, overwrite=False,
             shutil.rmtree(full_dest)
         else:
             os.remove(full_dest)
+
+    # Make sure the parent directory exists
+    os.makedirs(os.path.dirname(full_dest), exist_ok=True)
 
     if symlink:
         path = os.path.abspath(path)

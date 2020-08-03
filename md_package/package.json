@@ -5,7 +5,7 @@
     "build": "jlpm run build:lib",
     "build:labextension": "node ../build-ext.js .",
     "build:lib": "tsc",
-    "build:all": "jlpm run build:labextension",
+    "build:all": "jlpm run build:lib && jlpm run build:labextension",
     "clean": "jlpm run clean:lib",
     "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
     "clean:labextension": "rimraf md_package/statick",

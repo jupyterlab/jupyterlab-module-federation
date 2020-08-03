@@ -135,7 +135,8 @@ def _list_settings(schemas_dir, settings_dir, overrides, extension='.json', labe
     warnings = []
 
     if not os.path.exists(schemas_dir):
-        return (settings_list, warnings)
+        warnings = ['Settings directory does not exist at %s' % schemas_dir]
+        return ([], warnings)
 
     schema_pattern = schemas_dir + '/**/*' + extension
     schema_paths = [path for path in glob(schema_pattern, recursive=True)]

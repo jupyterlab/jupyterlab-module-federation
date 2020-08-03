@@ -23,7 +23,6 @@ commander
     .description('Build an extension')
     .usage('[options] <path>')
     .option('--prod', 'build in prod mode (default is dev)')
-    .option('--output <path>', 'Output path (default is `<path-to-package>/build`')
     .option('--watch')
     .action(
         async (cmd) => {
@@ -32,15 +31,14 @@ commander
                 node_env = 'production';
             }
             const packagePath = path.resolve(cmd.args[0]);
-            const output = cmd.output || path.join(__dirname, 'labextensions');
 
             const webpack = require.resolve('webpack-cli/bin/cli.js');
-
-            let cmdText = `node ${webpack} --config webpack.config.ext.js`;
+            const config = path.join(__dirname, 'webpack.config.ext.js');
+            let cmdText = `node ${webpack} --config ${config}`;
             if (cmd.watch) {
                 cmdText += ' --watch';
             }
-            const env = { OUTPUT_PATH: output, PACKAGE_PATH: packagePath, NODE_ENV: node_env };
+            const env = { PACKAGE_PATH: packagePath, NODE_ENV: node_env };
             console.log(env);
             run(cmdText, { env: { ...process.env, ...env } });
         }

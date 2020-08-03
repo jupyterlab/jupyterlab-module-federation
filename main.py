@@ -8,9 +8,11 @@ from jupyterlab_server.server import FileFindHandler, APIHandler
 from notebook.utils import url_path_join as ujoin, url_escape
 import json
 import os
-from traitlets import Unicode, List
+from traitlets import Unicode, List, Bool
 
 from tornado.web import StaticFileHandler
+
+from commands import get_app_info
 
 from settings_handler import SettingsHandler
 from themes_handler import ThemesHandler
@@ -27,24 +29,26 @@ with open(os.path.join(HERE, 'package.json')) as fid:
 
 class ExampleApp(LabServerApp):
     base_url = '/foo'
-    default_url = Unicode('/example',
+    default_url = Unicode('/lab',
                           help='The default URL to redirect to from `/`')
 
     extra_labextensions_path = List(Unicode(), config=True,
         help="""extra paths to look for Javascript notebook extensions"""
     )
 
+    browser_test = Bool(False, config=True)
+
     lab_config = LabConfig(
-        app_name = 'JupyterLab Example Federated App',
+        app_name = 'JupyterLab Federated App',
         app_settings_dir = os.path.join(HERE, 'build', 'application_settings'),
         app_version = version,
-        app_url = '/example',
-        schemas_dir = os.path.join(HERE, 'core_package', 'build', 'schemas'),
-        static_dir = os.path.join(HERE, 'core_package', 'build'),
+        app_url = '/lab',
+        schemas_dir = os.path.join(HERE, 'core_package', 'static', 'schemas'),
+        static_dir = os.path.join(HERE, 'core_package', 'static'),
         templates_dir = os.path.join(HERE, 'templates'),
-        themes_dir = os.path.join(HERE, 'core_package', 'build', 'themes'),
-        user_settings_dir = os.path.join(HERE, 'core_package', 'build', 'user_settings'),
-        workspaces_dir = os.path.join(HERE, 'core_package', 'build', 'workspaces'),
+        themes_dir = os.path.join(HERE, 'core_package', 'static', 'themes'),
+        user_settings_dir = os.path.join(HERE, 'core_package', 'static', 'user_settings'),
+        workspaces_dir = os.path.join(HERE, 'core_package', 'static', 'workspaces'),
     )
 
     def init_webapp(self):
@@ -53,13 +57,29 @@ class ExampleApp(LabServerApp):
         # Handle labextension assets
         web_app = self.web_app
         base_url = web_app.settings['base_url']
+        page_config = web_app.settings.get('page_config_data', {})
+        web_app.settings['page_config_data'] = page_config
+
+        if self.browser_test:
+            page_config['browserTest'] = True
+
+        info = get_app_info()
+        dynamic_extensions = page_config['dynamic_extensions'] = []
+        dynamic_mime_extension = page_config['dynamic_mime_extensions'] = []
+        for (ext, ext_data) in info['dynamic_exts'].items():
+            name = ext_data['name']
+            path = "lab/extensions/%s/remoteEntry.js" % name
+            module = "./extension"
+            load_data = dict(name=name, path=path, module=module)
+            if ext_data['jupyterlab'].get('extension'):
+                dynamic_extensions.append(load_data)
+            else:
+                dynamic_mime_extension.append(load_data)
+
         handlers = []
 
-        # Temporary addition for testing
-        self.extra_labextensions_path += [os.path.join(HERE, 'labextensions')]
-
         labextensions_path = self.extra_labextensions_path + jupyter_path('labextensions')
-        labextensions_url = ujoin(base_url, "example", r"labextensions/(.*)")
+        labextensions_url = ujoin(base_url, "lab", r"extensions/(.*)")
         handlers.append(
             (labextensions_url, FileFindHandler, {
                 'path': labextensions_path,
@@ -67,7 +87,7 @@ class ExampleApp(LabServerApp):
             }))
 
         # Handle requests for the list of settings. Make slash optional.
-        settings_path = ujoin(base_url, 'example', 'api', 'settings')
+        settings_path = ujoin(base_url, 'lab', 'api', 'settings')
         settings_config = {
             'app_settings_dir': self.lab_config.app_settings_dir,
             'schemas_dir': self.lab_config.schemas_dir,
@@ -83,7 +103,7 @@ class ExampleApp(LabServerApp):
         handlers.append((setting_path, SettingsHandler, settings_config))
 
         # Handle requests for themes
-        themes_path = ujoin(base_url, 'example', 'api', 'themes', '(.*)')
+        themes_path = ujoin(base_url, 'lab', 'api', 'themes', '(.*)')
         handlers.append((
             themes_path,
             ThemesHandler,

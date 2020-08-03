@@ -50,9 +50,6 @@ jobs:
         with:
           node-version: '12.x'
       - name: Install python dependencies
-        run: |
-          pip install setuptools pip --upgrade
-          pip install -v -e ".[test]"
-          jlpm && jlpm run build
+        run: bash install.sh
       - name: Browser check
         run: python run.py

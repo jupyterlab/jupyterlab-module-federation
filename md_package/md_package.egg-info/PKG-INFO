@@ -1,0 +1,44 @@
+Metadata-Version: 2.1
+Name: md-package
+Version: 0.3.0
+Summary: A federated markdown extension
+Home-page: https://github.com/jupyterlab/foo
+Author: JupyterLab
+License: BSD-3-Clause
+Description: ## md_package
+        
+        A federated markdown package
+        
+        ## Prequisites
+        - JupyterLab 3+
+        - node 12+
+        
+        ## Installation
+        - `pip install -e . && python ../labextensions.py develop .`
+        
+        ## Develop
+        - Run `jlpm run watch:all` to watch the source and build to static.
+        
+        
+        ## Notes
+        - Assets are built into `md_package/static` so that the package is self-contained.  They are also shipped in `data_files` so the package is automatically installed as
+        a lab extension.
+        - Need to use the script from from `@jupyterlab/buildutils` when available
+        - Need to use `jupyter labextension develop` when available
+        - `pip install .` is broken - complains about `tsserver`
+        - Since `symlink=True` by default, there is no need to do anything special on the JupyterLab side,
+        just refresh the page when the extension assets update
+        
+Keywords: Jupyter,JupyterLab,JupyterLab Extension
+Platform: Linux
+Platform: Mac OS X
+Platform: Windows
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Framework :: Jupyter
+Description-Content-Type: text/markdown

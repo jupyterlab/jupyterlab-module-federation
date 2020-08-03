@@ -52,6 +52,8 @@ async function main() {
     PageConfig.getOption('dynamic_mime_extensions')
   );
 
+  console.log("extension_data")
+  console.log(extension_data)
   // Get dynamic plugins
   // TODO: deconflict these with builtins?
   const dynamicPromises = extension_data.map(data =>

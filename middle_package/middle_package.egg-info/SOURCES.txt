@@ -1,0 +1,6 @@
+middle_package.py
+setup.py
+middle_package.egg-info/PKG-INFO
+middle_package.egg-info/SOURCES.txt
+middle_package.egg-info/dependency_links.txt
+middle_package.egg-info/top_level.txt

@@ -68,6 +68,8 @@ class ExampleApp(LabServerApp):
         dynamic_mime_extension = page_config['dynamic_mime_extensions'] = []
         for (ext, ext_data) in info['dynamic_exts'].items():
             name = ext_data['name']
+            if name == '@jupyterlab/example-another-package':
+                continue
             path = "lab/extensions/%s/remoteEntry.js" % name
             module = "./extension"
             load_data = dict(name=name, path=path, module=module)

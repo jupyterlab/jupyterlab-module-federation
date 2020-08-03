@@ -14,7 +14,8 @@
   "author": "Project Jupyter",
   "dependencies": {
     "@jupyterlab/application": "^3.0.0-alpha.4",
-    "@jupyterlab/apputils": "^3.0.0-alpha.4"
+    "@jupyterlab/apputils": "^3.0.0-alpha.4",
+    "lodash": "^4.17.19"
   },
   "publishConfig": {
     "access": "public"

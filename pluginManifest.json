@@ -2,7 +2,7 @@
     "version": "1.0",
     "plugins": {
         "another": {
-            "url": "http://localhost:8888/foo/example/labextensions/@jupyterlab/example-another-package/remoteEntry.js",
+            "url": "http://localhost:8888/foo/lab/extensions/@jupyterlab/example-another-package/remoteEntry.js",
             "name": "@jupyterlab/example-another-package",
             "path": "./extension"
         }

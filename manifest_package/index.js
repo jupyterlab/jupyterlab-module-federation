@@ -5,6 +5,7 @@
  */
 
 import manifest from '../pluginManifest.json';
+import _ from "lodash";
 
 function loadScript(url) {
     return new Promise((resolve, reject) => {
@@ -36,7 +37,7 @@ const plugin = {
     requires: [],
     activate: async (app, manager) => {
         console.log("Manifest plugin activated!");
-        console.log("Trying to load another packages bundle...");
+        console.log("Trying to load another packages bundle" + _.repeat(".", 5));
 
         const anotherBundle = manifest.plugins.another;
 

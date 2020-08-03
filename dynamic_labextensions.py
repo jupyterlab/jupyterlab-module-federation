@@ -37,7 +37,7 @@ __version__ = '0.1.0'
 # Public API
 #------------------------------------------------------------------------------
 
-def develop_labextension(path, symlink=False, overwrite=False,
+def develop_labextension(path, symlink=True, overwrite=False,
                         user=False, labextensions_dir=None,
                         destination=None, 
                         logger=None, sys_prefix=False
@@ -60,7 +60,7 @@ def develop_labextension(path, symlink=False, overwrite=False,
         Otherwise do a system-wide install (e.g. /usr/local/share/jupyter/labextensions).
     overwrite : bool [default: False]
         If True, always install the files, regardless of what may already be installed.
-    symlink : bool [default: False]
+    symlink : bool [default: True]
         If True, create a symlink in labextensions, rather than copying files.
         Windows support for symlinks requires a permission bit which only admin users
         have by default, so don't rely on it.
@@ -122,7 +122,7 @@ def develop_labextension(path, symlink=False, overwrite=False,
     return full_dest
 
 
-def develop_labextension_py(module, user=False, sys_prefix=False, overwrite=False, symlink=False, labextensions_dir=None, logger=None):
+def develop_labextension_py(module, user=False, sys_prefix=False, overwrite=False, symlink=True, labextensions_dir=None, logger=None):
     """Develop a labextension bundled in a Python package.
 
     Returns a list of installed/updated directories.

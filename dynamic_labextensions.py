@@ -7,11 +7,13 @@
 from __future__ import print_function
 
 import os
+import os.path as osp
 import shutil
 import sys
 import tarfile
 import zipfile
 from os.path import basename, join as pjoin, normpath
+import subprocess
 
 from urllib.parse import urlparse
 from urllib.request import urlretrieve
@@ -251,6 +253,10 @@ def _get_labextension_metadata(module):
         Importable Python module exposing the
         magic-named `_jupyter_labextension_paths` function
     """
+    if osp.exists(osp.abspath(module)):
+        from setuptools import find_packages
+        module = find_packages(module)[0]
+
     m = import_item(module)
     if not hasattr(m, '_jupyter_labextension_paths'):
         raise KeyError('The Python module {} is not a valid labextension, '

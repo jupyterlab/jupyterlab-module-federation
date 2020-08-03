@@ -59,7 +59,7 @@ with open("README.md", "r") as fh:
 setup_args = dict(
     name=name,
     version=version,
-    url="https://github.com/jupyterlab/extension-examples",
+    url="https://github.com/jupyterlab/foo",
     author="JupyterLab",
     description="A federated markdown extension",
     long_description= long_description,

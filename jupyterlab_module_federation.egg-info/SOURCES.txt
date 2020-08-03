@@ -1,8 +1,0 @@
-README.md
-main.py
-setup.py
-jupyterlab_module_federation.egg-info/PKG-INFO
-jupyterlab_module_federation.egg-info/SOURCES.txt
-jupyterlab_module_federation.egg-info/dependency_links.txt
-jupyterlab_module_federation.egg-info/requires.txt
-jupyterlab_module_federation.egg-info/top_level.txt

@@ -1,6 +1,0 @@
-manifest_package.py
-setup.py
-manifest_package.egg-info/PKG-INFO
-manifest_package.egg-info/SOURCES.txt
-manifest_package.egg-info/dependency_links.txt
-manifest_package.egg-info/top_level.txt

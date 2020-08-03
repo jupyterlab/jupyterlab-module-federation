@@ -239,11 +239,9 @@ def _get_labextension_dir(user=False, sys_prefix=False, prefix=None, labextensio
 def _get_labextension_metadata(module):
     """Get the list of labextension paths associated with a Python module.
 
-    Returns a tuple of (the module,             [{
-        'section': 'notebook',
+    Returns a tuple of (the module path,             [{
         'src': 'mockextension',
-        'dest': '_mockdestination',
-        'require': '_mockdestination/index'
+        'dest': '_mockdestination'
     }])
 
     Parameters
@@ -259,7 +257,6 @@ def _get_labextension_metadata(module):
                        'it is missing the `_jupyter_labextension_paths()` method.'.format(module))
     labexts = m._jupyter_labextension_paths()
     return m, labexts
-
 
 
 if __name__ == '__main__':

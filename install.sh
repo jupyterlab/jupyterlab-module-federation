@@ -10,6 +10,5 @@ pip install -e ./md_package
 pip install -e ./middle_package
 pip install -e ./theme_package
 python labextensions.py develop json_package
-python labextensions.py develop md_package
 python labextensions.py develop middle_package
 python labextensions.py develop theme_package

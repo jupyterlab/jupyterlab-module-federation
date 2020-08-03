@@ -253,11 +253,17 @@ def _get_labextension_metadata(module):
         Importable Python module exposing the
         magic-named `_jupyter_labextension_paths` function
     """
-    if osp.exists(osp.abspath(module)):
-        from setuptools import find_packages
-        module = find_packages(module)[0]
+
 
     m = import_item(module)
+    if not hasattr(m, '_jupyter_labextension_paths'):
+        if osp.exists(osp.abspath(module)):
+            from setuptools import find_packages
+            packages = find_packages(module)
+            if not packages:
+                raise ValueError('Could not find module %s' % module)
+            m = import_item(packages[0])
+
     if not hasattr(m, '_jupyter_labextension_paths'):
         raise KeyError('The Python module {} is not a valid labextension, '
                        'it is missing the `_jupyter_labextension_paths()` method.'.format(module))

@@ -3,7 +3,7 @@ set -ex
 set -o pipefail
 
 pip install --user setuptools pip --upgrade
-pip install -v -e ".[test]"
+pip install -e ".[test]"
 jlpm && jlpm run build
 pip install -e ./json_package
 pip install -e ./md_package

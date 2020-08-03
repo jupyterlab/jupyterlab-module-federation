@@ -33,8 +33,8 @@ commander
             const packagePath = path.resolve(cmd.args[0]);
 
             const webpack = require.resolve('webpack-cli/bin/cli.js');
-
-            let cmdText = `node ${webpack} --config webpack.config.ext.js`;
+            const config = path.join(__dirname, 'webpack.config.ext.js');
+            let cmdText = `node ${webpack} --config ${config}`;
             if (cmd.watch) {
                 cmdText += ' --watch';
             }

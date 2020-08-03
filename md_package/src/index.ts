@@ -1,76 +1,107 @@
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
-import { ILayoutRestorer } from '@jupyterlab/application';
+
+import {
+    ILayoutRestorer,
+    JupyterFrontEnd,
+    JupyterFrontEndPlugin
+} from '@jupyterlab/application';
+
 import { WidgetTracker } from '@jupyterlab/apputils';
-import { MarkdownViewer, MarkdownViewerFactory, IMarkdownViewerTracker } from '@jupyterlab/markdownviewer';
-import { IRenderMimeRegistry, markdownRendererFactory } from '@jupyterlab/rendermime';
+
+import {
+    MarkdownViewer,
+    MarkdownViewerFactory,
+    MarkdownDocument
+} from '@jupyterlab/markdownviewer';
+
+import {
+    IRenderMimeRegistry,
+    markdownRendererFactory
+} from '@jupyterlab/rendermime';
+
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
+
 import { PathExt } from '@jupyterlab/coreutils';
+
 /**
  * The command IDs used by the markdownviewer plugin.
  */
-var CommandIDs;
-(function (CommandIDs) {
-    CommandIDs.markdownPreview = 'markdownviewer-federated:open';
-    CommandIDs.markdownEditor = 'markdownviewer-federated:edit';
-})(CommandIDs || (CommandIDs = {}));
+namespace CommandIDs {
+    export const markdownPreview = 'markdownviewer-federated:open';
+    export const markdownEditor = 'markdownviewer-federated:edit';
+}
+
 /**
  * The name of the factory that creates markdown viewer widgets.
  */
-const FACTORY = 'FEDERATED Markdown Preview';
+const FACTORY = 'Markdown Preview';
+
 /**
  * The markdown viewer plugin.
  */
-const plugin = {
+const plugin: JupyterFrontEndPlugin<void> = {
     activate,
     id: '@jupyterlab/example-federated-md:plugin',
-    // provides: IMarkdownViewerTracker,
     requires: [ILayoutRestorer, IRenderMimeRegistry, ISettingRegistry],
     autoStart: true
 };
+
 /**
  * Activate the markdown viewer plugin.
  */
-function activate(app, restorer, rendermime, settingRegistry, middleToken) {
+function activate(
+    app: JupyterFrontEnd,
+    restorer: ILayoutRestorer,
+    rendermime: IRenderMimeRegistry,
+    settingRegistry: ISettingRegistry
+): void {
     const { commands, docRegistry } = app;
 
     // Add the markdown renderer factory.
     rendermime.addFactory(markdownRendererFactory);
-    const namespace = 'federated-markdownviewer-widget';
-    const tracker = new WidgetTracker({
+
+    const namespace = 'markdownviewer-widget';
+    const tracker = new WidgetTracker<MarkdownDocument>({
         namespace
     });
-    let config = Object.assign({}, MarkdownViewer.defaultConfig);
+
+    let config: Partial<MarkdownViewer.IConfig> = {
+        ...MarkdownViewer.defaultConfig
+    };
+
     /**
      * Update the settings of a widget.
      */
-    function updateWidget(widget) {
-        Object.keys(config).forEach((k) => {
-            var _a;
-            widget.setOption(k, (_a = config[k]) !== null && _a !== void 0 ? _a : null);
+    function updateWidget(widget: MarkdownViewer): void {
+        Object.keys(config).forEach((k: any) => {
+            widget.setOption(k, (config as any)[k] ?? null);
         });
     }
+
     /**
      * Update the setting values.
      */
-    function updateSettings(settings) {
-        config = settings.composite;
+    function updateSettings(settings: ISettingRegistry.ISettings) {
+        config = settings.composite as Partial<MarkdownViewer.IConfig>;
         tracker.forEach(widget => {
             updateWidget(widget.content);
         });
     }
+
     // Fetch the initial state of the settings.
     settingRegistry
         .load(plugin.id)
-        .then((settings) => {
+        .then((settings: ISettingRegistry.ISettings) => {
             settings.changed.connect(() => {
                 updateSettings(settings);
             });
             updateSettings(settings);
         })
-        .catch((reason) => {
+        .catch((reason: Error) => {
             console.error(reason.message);
         });
+
     // Register the MarkdownViewer factory.
     const factory = new MarkdownViewerFactory({
         rendermime,
@@ -89,14 +120,16 @@ function activate(app, restorer, rendermime, settingRegistry, middleToken) {
         void tracker.add(widget);
     });
     docRegistry.addWidgetFactory(factory);
+
     // Handle state restoration.
     void restorer.restore(tracker, {
         command: 'docmanager:open',
         args: widget => ({ path: widget.context.path, factory: FACTORY }),
         name: widget => widget.context.path
     });
+
     commands.addCommand(CommandIDs.markdownPreview, {
-        label: 'Federated Markdown Preview',
+        label: 'Markdown Preview',
         execute: args => {
             const path = args['path'];
             if (typeof path !== 'string') {
@@ -109,6 +142,7 @@ function activate(app, restorer, rendermime, settingRegistry, middleToken) {
             });
         }
     });
+
     commands.addCommand(CommandIDs.markdownEditor, {
         execute: () => {
             const widget = tracker.currentWidget;
@@ -126,18 +160,20 @@ function activate(app, restorer, rendermime, settingRegistry, middleToken) {
         },
         isVisible: () => {
             const widget = tracker.currentWidget;
-            return ((widget && PathExt.extname(widget.context.path) === '.md') || false);
+            return (
+                (widget && PathExt.extname(widget.context.path) === '.md') || false
+            );
         },
         label: 'Show Markdown Editor'
     });
+
     app.contextMenu.addItem({
         command: CommandIDs.markdownEditor,
         selector: '.jp-RenderedMarkdown'
     });
-    // return tracker;
 }
+
 /**
  * Export the plugin as default.
  */
 export default plugin;
-//# sourceMappingURL=index.js.map

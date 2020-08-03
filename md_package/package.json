@@ -1,11 +1,23 @@
 {
   "name": "@jupyterlab/example-federated-md",
-  "version": "2.1.0",
-  "private": true,
+  "version": "1.0.0",
   "scripts": {
-    "prepublishOnly": "npm run build",
-    "watch": "npm run clean && webpack --watch"
+    "build": "jlpm run build:lib",
+    "build:labextension": "node ../build-ext.js .",
+    "build:lib": "tsc",
+    "build:all": "jlpm run build:lib && jlpm run build:labextension",
+    "clean": "jlpm run clean:lib",
+    "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
+    "clean:labextension": "rimraf md_package/statick",
+    "clean:all": "jlpm run clean:lib && jlpm run clean:labextension",
+    "install-ext": "pip install -e . && python ../labextension.py develop .",
+    "prepare": "jlpm run clean && jlpm run build",
+    "watch": "tsc -w",
+    "watch:labextension": "node ../build-ext.js --watch .",
+    "watch:all": "run-p watch watch:labextension"
   },
+  "main": "lib/index.js",
+  "license": "BSD-3-Clause",
   "dependencies": {
     "@jupyterlab/application": "^3.0.0-alpha.4",
     "@jupyterlab/apputils": "^3.0.0-alpha.4",
@@ -16,6 +28,7 @@
     "@jupyterlab/settingregistry": "^3.0.0-alpha.4"
   },
   "devDependencies": {
+    "@types/react": "16.9.41",
     "rimraf": "~3.0.0",
     "typedoc": "^0.17.7",
     "typescript": "~3.9.2"
@@ -26,7 +39,9 @@
   "jupyterlab": {
     "extension": true,
     "schemaDir": "schema",
-    "outputDir": "static",
-    "singletonPackages": ["@jupyterlab/example-federated-middle"]
+    "outputDir": "md_package/static",
+    "singletonPackages": [
+      "@jupyterlab/example-federated-middle"
+    ]
   }
 }

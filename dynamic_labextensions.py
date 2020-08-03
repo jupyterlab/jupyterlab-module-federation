@@ -7,11 +7,13 @@
 from __future__ import print_function
 
 import os
+import os.path as osp
 import shutil
 import sys
 import tarfile
 import zipfile
 from os.path import basename, join as pjoin, normpath
+import subprocess
 
 from urllib.parse import urlparse
 from urllib.request import urlretrieve
@@ -35,7 +37,7 @@ __version__ = '0.1.0'
 # Public API
 #------------------------------------------------------------------------------
 
-def develop_labextension(path, symlink=False, overwrite=False,
+def develop_labextension(path, symlink=True, overwrite=False,
                         user=False, labextensions_dir=None,
                         destination=None, 
                         logger=None, sys_prefix=False
@@ -58,7 +60,7 @@ def develop_labextension(path, symlink=False, overwrite=False,
         Otherwise do a system-wide install (e.g. /usr/local/share/jupyter/labextensions).
     overwrite : bool [default: False]
         If True, always install the files, regardless of what may already be installed.
-    symlink : bool [default: False]
+    symlink : bool [default: True]
         If True, create a symlink in labextensions, rather than copying files.
         Windows support for symlinks requires a permission bit which only admin users
         have by default, so don't rely on it.
@@ -86,6 +88,7 @@ def develop_labextension(path, symlink=False, overwrite=False,
     if not destination:
         destination = basename(normpath(path))
     destination = cast_unicode_py2(destination)
+
     full_dest = normpath(pjoin(labext, destination))
     if overwrite and os.path.lexists(full_dest):
         if logger:
@@ -94,6 +97,9 @@ def develop_labextension(path, symlink=False, overwrite=False,
             shutil.rmtree(full_dest)
         else:
             os.remove(full_dest)
+
+    # Make sure the parent directory exists
+    os.makedirs(os.path.dirname(full_dest), exist_ok=True)
 
     if symlink:
         path = os.path.abspath(path)
@@ -120,7 +126,7 @@ def develop_labextension(path, symlink=False, overwrite=False,
     return full_dest
 
 
-def develop_labextension_py(module, user=False, sys_prefix=False, overwrite=False, symlink=False, labextensions_dir=None, logger=None):
+def develop_labextension_py(module, user=False, sys_prefix=False, overwrite=False, symlink=True, labextensions_dir=None, logger=None):
     """Develop a labextension bundled in a Python package.
 
     Returns a list of installed/updated directories.
@@ -239,11 +245,9 @@ def _get_labextension_dir(user=False, sys_prefix=False, prefix=None, labextensio
 def _get_labextension_metadata(module):
     """Get the list of labextension paths associated with a Python module.
 
-    Returns a tuple of (the module,             [{
-        'section': 'notebook',
+    Returns a tuple of (the module path,             [{
         'src': 'mockextension',
-        'dest': '_mockdestination',
-        'require': '_mockdestination/index'
+        'dest': '_mockdestination'
     }])
 
     Parameters
@@ -253,13 +257,22 @@ def _get_labextension_metadata(module):
         Importable Python module exposing the
         magic-named `_jupyter_labextension_paths` function
     """
+
+
     m = import_item(module)
+    if not hasattr(m, '_jupyter_labextension_paths'):
+        if osp.exists(osp.abspath(module)):
+            from setuptools import find_packages
+            packages = find_packages(module)
+            if not packages:
+                raise ValueError('Could not find module %s' % module)
+            m = import_item(packages[0])
+
     if not hasattr(m, '_jupyter_labextension_paths'):
         raise KeyError('The Python module {} is not a valid labextension, '
                        'it is missing the `_jupyter_labextension_paths()` method.'.format(module))
     labexts = m._jupyter_labextension_paths()
     return m, labexts
-
 
 
 if __name__ == '__main__':

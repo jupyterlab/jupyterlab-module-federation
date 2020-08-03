@@ -1,0 +1,26 @@
+{
+  "name": "@jupyterlab/example-another-package",
+  "version": "3.0.0-alpha.4",
+  "description": "JupyterLab - Remote bundle that exists",
+  "homepage": "https://github.com/jupyterlab/jupyterlab",
+  "bugs": {
+    "url": "https://github.com/jupyterlab/jupyterlab/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jupyterlab/jupyterlab.git"
+  },
+  "license": "BSD-3-Clause",
+  "author": "Project Jupyter",
+  "dependencies": {
+    "@jupyterlab/application": "^3.0.0-alpha.4",
+    "@jupyterlab/apputils": "^3.0.0-alpha.4",
+    "lodash": "^4.17.19"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "jupyterlab": {
+    "extension": true
+  }
+}

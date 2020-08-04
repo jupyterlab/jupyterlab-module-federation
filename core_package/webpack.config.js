@@ -78,7 +78,7 @@ const bootstrap = 'import("./index.out.js");'
 fs.writeFileSync(entryPoint, bootstrap);
 
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'production') {
   baseConfig.mode = 'production';
 }
 

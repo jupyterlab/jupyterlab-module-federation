@@ -98,7 +98,7 @@ module.exports = [
       rules: [
         // Workaround for https://github.com/jupyterlab/jupyterlab/issues/8655
         {
-      test: /vega-statistics\/src\/numbers.js$/,
+      test: /vega-statistics\/src\/*.js$/,
       use: {
         loader: 'babel-loader',
         options: {

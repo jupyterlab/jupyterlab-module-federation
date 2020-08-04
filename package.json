@@ -13,7 +13,6 @@
     "build:json:prod": "node build-ext.js --prod ./json_package",
     "build:prod": "npm run build:core:prod && npm run build:json:prod",
     "watch:md": "node build-ext.js ./md_package --watch",
-    "clean": "rimraf labextensions"
   },
   "devDependencies": {
     "ajv": "^6.12.3",

@@ -51,5 +51,5 @@ jobs:
           node-version: '12.x'
       - name: Install python dependencies
         run: bash install.sh
-      - name: Browser check
-        run: python run.py
+      - name: Tests
+        run: bash test.sh

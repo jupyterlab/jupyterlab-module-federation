@@ -9,6 +9,9 @@
     "build:middle": "node build-ext.js ./middle_package",
     "build:md": "node build-ext.js ./md_package",
     "build:theme": "node build-ext.js ./theme_package",
+    "build:core:prod": "cd core_packages && npm run build:prod",
+    "build:json:prod": "node build-ext.js --prod ./json_package",
+    "build:prod": "npm run build:core:prod && npm run build:json:prod",
     "watch:md": "node build-ext.js ./md_package --watch",
     "clean": "rimraf labextensions"
   },

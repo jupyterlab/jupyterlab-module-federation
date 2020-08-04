@@ -77,6 +77,11 @@ const entryPoint = path.join(buildDir, 'bootstrap.js');
 const bootstrap = 'import("./index.out.js");'
 fs.writeFileSync(entryPoint, bootstrap);
 
+
+if (process.env.NODE_ENV !== 'production') {
+  baseConfig.mode = 'production';
+}
+
 module.exports = [
   merge(baseConfig, {
     entry: entryPoint,
@@ -88,6 +93,19 @@ module.exports = [
       },
       filename: 'bundle.js',
       publicPath: 'static/lab/'
+    },
+    module: {
+      rules: [
+        // Workaround for https://github.com/jupyterlab/jupyterlab/issues/8655
+        {
+      test: /vega-statistics\/src\/numbers.js$/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env']
+        }
+      }
+        }]
     },
     plugins: [
       new ModuleFederationPlugin({

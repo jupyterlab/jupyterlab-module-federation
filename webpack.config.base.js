@@ -70,6 +70,10 @@ module.exports = {
   mode: 'development',
   module: { rules },
   resolve: { alias: { url: false, buffer: false, ...phosphorAlias } },
+  watchOptions: {
+    poll: 500,
+    aggregateTimeout: 1000
+  },
   plugins: [
     new webpack.DefinePlugin({
       'process.env': '{}',

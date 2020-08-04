@@ -61,7 +61,7 @@ function activate(
     // Add the markdown renderer factory.
     rendermime.addFactory(markdownRendererFactory);
 
-    const namespace = 'markdownviewer-widget';
+    const namespace = 'markdownviewer-federated-widget';
     const tracker = new WidgetTracker<MarkdownDocument>({
         namespace
     });

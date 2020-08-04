@@ -45,6 +45,12 @@ check_flags['installed'] = (
     "Check only if the extension is installed."
 )
 
+develop_flags = copy(flags)
+develop_flags['overwrite'] = (
+    {'DevelopLabExtensionApp': {'overwrite': True}},
+    "Overwrite files"
+)
+
 update_flags = copy(flags)
 update_flags['all'] = (
     {'UpdateLabExtensionApp': {'all': True}},
@@ -159,9 +165,13 @@ class InstallLabExtensionApp(BaseExtensionApp):
 
 class DevelopLabExtensionApp(BaseExtensionApp):
     desciption = "Develop labextension"
+    flags = develop_flags
     
     user = Bool(False, config=True, help="Whether to do a user install")
     sys_prefix = Bool(True, config=True, help="Use the sys.prefix as the prefix")
+    overwrite = Bool(False, config=True, help="Whether to overwrite files")
+    symlink = Bool(True, config=False, help="Whether to use a symlink")
+
     labextensions_dir = Unicode('', config=True,
            help="Full path to labextensions dir (probably use prefix or user)")
 
@@ -169,7 +179,8 @@ class DevelopLabExtensionApp(BaseExtensionApp):
         "Add config for this labextension"
         self.extra_args = self.extra_args or [os.getcwd()]
         for arg in self.extra_args:
-            develop_labextension_py(arg, user=self.user, sys_prefix=self.sys_prefix, labextensions_dir=self.labextensions_dir, logger=self.log)
+            develop_labextension_py(arg, user=self.user, sys_prefix=self.sys_prefix, labextensions_dir=self.labextensions_dir, logger=self.log, overwrite=self.overwrite,
+            symlink=self.symlink)
 
 
 class UpdateLabExtensionApp(BaseExtensionApp):

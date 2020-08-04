@@ -78,7 +78,7 @@ def develop_labextension(path, symlink=True, overwrite=False,
     labext = _get_labextension_dir(user=user, sys_prefix=sys_prefix, labextensions_dir=labextensions_dir)
     # make sure labextensions dir exists
     ensure_dir_exists(labext)
-
+    import pdb; pdb.set_trace()
     
     if isinstance(path, (list, tuple)):
         raise TypeError("path must be a string pointing to a single extension to install; call this function multiple times to install multiple extensions")
@@ -107,6 +107,9 @@ def develop_labextension(path, symlink=True, overwrite=False,
             if logger:
                 logger.info("Symlinking: %s -> %s" % (full_dest, path))
             os.symlink(path, full_dest)
+        elif not os.path.islink(path):
+            raise ValueError("%s exists and is not a symlink" % path)
+
     elif os.path.isdir(path):
         path = pjoin(os.path.abspath(path), '') # end in path separator
         for parent, dirs, files in os.walk(path):

@@ -12,7 +12,7 @@
     "build:core:prod": "cd core_package && npm run build:prod",
     "build:json:prod": "node build-ext.js --prod ./json_package",
     "build:prod": "npm run build:core:prod && npm run build:json:prod",
-    "watch:md": "node build-ext.js ./md_package --watch",
+    "watch:md": "node build-ext.js ./md_package --watch"
   },
   "devDependencies": {
     "ajv": "^6.12.3",

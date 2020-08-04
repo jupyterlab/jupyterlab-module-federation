@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "npm run clean && webpack",
+    "build:prod": "npm run clean && webpack --mode production",
     "clean": "rimraf build",
     "prepublishOnly": "npm run build",
     "watch": "npm run clean && webpack --watch"
@@ -52,7 +53,10 @@
     "@jupyterlab/vega5-extension": "~3.0.0-alpha.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.11.0",
+    "@babel/preset-env": "^7.11.0",
     "@jupyterlab/buildutils": "^3.0.0-alpha.1",
+    "babel-loader": "^8.1.0",
     "copy-webpack-plugin": "^6.0.1",
     "css-loader": "~3.2.0",
     "file-loader": "~5.0.2",

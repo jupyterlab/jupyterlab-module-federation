@@ -6,7 +6,6 @@ python labextensions.py list
 python run.py
 jlpm run build:prod
 
-pip uninstall md_package
-python labextensions.py uninstall json_package
-python labextensions.py uninstall middle_package
-python labextensions.py uninstall theme_package
+pip uninstall -y md_package
+python labextensions.py uninstall @jupyterlab/federated-theme
+jlpm run clean:all

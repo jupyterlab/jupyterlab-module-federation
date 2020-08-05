@@ -24,6 +24,9 @@ import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 import { PathExt } from '@jupyterlab/coreutils';
 
+import { IMiddleToken } from '@jupyterlab/example-federated-middle';
+
+
 /**
  * The command IDs used by the markdownviewer plugin.
  */
@@ -43,7 +46,7 @@ const FACTORY = 'Markdown Preview (Federated)';
 const plugin: JupyterFrontEndPlugin<void> = {
     activate,
     id: '@jupyterlab/example-federated-md:plugin',
-    requires: [ILayoutRestorer, IRenderMimeRegistry, ISettingRegistry],
+    requires: [ILayoutRestorer, IRenderMimeRegistry, ISettingRegistry, IMiddleToken],
     autoStart: true
 };
 
@@ -54,8 +57,11 @@ function activate(
     app: JupyterFrontEnd,
     restorer: ILayoutRestorer,
     rendermime: IRenderMimeRegistry,
-    settingRegistry: ISettingRegistry
+    settingRegistry: ISettingRegistry,
+    middleToken: IMiddleToken
 ): void {
+    console.log('got middle token', middleToken);
+
     const { commands, docRegistry } = app;
 
     // Add the markdown renderer factory.

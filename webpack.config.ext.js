@@ -39,8 +39,10 @@ const exposes = {
   './extension': index
 }
 
+let extensionImport = data['name'];
 if (extEntry !== true) {
   exposes['./extension'] = path.join(packagePath, extEntry);
+  extensionImport += '/' + extEntry;
 }
 
 const coreData = require('./core_package/package.json');
@@ -99,12 +101,28 @@ const extras = Build.ensureAssets({
   output: outputPath
 });
 
-fs.copyFileSync(path.join(packagePath, 'package.json'), path.join(outputPath, 'package.orig.json'))
+fs.copyFileSync(path.join(packagePath, 'package.json'), path.join(outputPath, 'package.orig.json'));
 
-// Make a bootstrap entrypoint
-const entryPoint = path.join(outputPath, 'bootstrap.js');
-const bootstrap = 'import("' + exposes['./extension'] + '");'
+// Create the wrapper package
+const wrapper = path.join(packagePath, '.wrapper');
+if (fs.existsSync(wrapper)) {
+  fs.rmdirSync(wrapper, { recursive: true });
+}
+fs.mkdirSync(wrapper);
+
+// Make a bootstrap entrypoint file
+const entryPoint = path.join(wrapper, 'bootstrap.js');
+const bootstrap = 'import("' + extensionImport + '");'
 fs.writeFileSync(entryPoint, bootstrap);
+
+const dummyPackage = {
+  name: 'dummy',
+  private: true,
+  dependencies: data.dependencies
+}
+dummyPackage.dependencies[data.name] == 'file://..';
+fs.writeFileSync(path.join(wrapper, 'package.json'), JSON.stringify(dummyPackage));
+
 
 module.exports = [
   merge(baseConfig, {

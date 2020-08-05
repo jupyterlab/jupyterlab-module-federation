@@ -35,14 +35,16 @@ outputPath = path.join(packagePath, outputPath);
 let extEntry = data.jupyterlab.extension || data.jupyterlab.mimeExtension;
 const index = require.resolve(packagePath);
 const exposes = {
-  './index': index,
   './extension': index
 }
+
+// TODO
+// Try and wrap the export so we're exposing something in our own package
 
 let extensionImport = data['name'];
 if (extEntry !== true) {
   exposes['./extension'] = path.join(packagePath, extEntry);
-  extensionImport += '/' + extEntry;
+  extensionImport = path.join(extensionImport, extEntry);
 }
 
 const coreData = require('./core_package/package.json');
@@ -61,6 +63,9 @@ Object.keys(data.dependencies).forEach((element) => {
 }
   shared[element].requiredVersion = data.dependencies[element];
 });
+
+// Add the package itself.
+shared[data.name] = { requiredVersion: '~' + data.version };
 
 // Remove non-shared.
 (data.jupyterlab.nonSharedPackages || []).forEach((element) => {
@@ -116,11 +121,8 @@ const bootstrap = 'import("' + extensionImport + '");'
 fs.writeFileSync(entryPoint, bootstrap);
 
 const dummyPackage = {
-  name: 'dummy',
-  private: true,
-  dependencies: data.dependencies
+  name: 'dummy'
 }
-dummyPackage.dependencies[data.name] == 'file://..';
 fs.writeFileSync(path.join(wrapper, 'package.json'), JSON.stringify(dummyPackage));
 
 

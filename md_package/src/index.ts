@@ -24,7 +24,8 @@ import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 import { PathExt } from '@jupyterlab/coreutils';
 
-import { IMiddleToken } from '@jupyterlab/example-federated-middle';
+declare var require: any;
+const IMiddleToken = require('@jupyterlab/example-federated-middle').IMiddleToken as any;
 
 
 /**
@@ -58,7 +59,7 @@ function activate(
     restorer: ILayoutRestorer,
     rendermime: IRenderMimeRegistry,
     settingRegistry: ISettingRegistry,
-    middleToken: IMiddleToken
+    middleToken: typeof IMiddleToken
 ): void {
     console.log('got middle token', middleToken);
 

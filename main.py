@@ -38,7 +38,7 @@ class ExampleApp(LabServerApp):
     default_url = Unicode('/lab',
                           help='The default URL to redirect to from `/`')
     browser_test = Bool(False, config=True)
-
+    
     app_settings_dir = os.path.join(HERE, 'build', 'application_settings')
     app_version = version
     schemas_dir = os.path.join(HERE, 'core_package', 'static', 'schemas')

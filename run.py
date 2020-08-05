@@ -31,14 +31,18 @@ def main():
     spec = importlib.util.spec_from_file_location("example", mod_path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
+    sys.modules[__name__] = mod
 
     class App(mod.ExampleApp):
         """An app that launches an example and waits for it to start up, checking for
         JS console errors, JS errors, and Python logged errors.
         """
         ip = '127.0.0.1'
-        open_browser = Bool(False)
- 
+        serverapp_config = {
+            "open_browser": False
+        }
+        browser_test = True
+
         def initialize_settings(self):
             run_test(self.serverapp, run_browser)
             super().initialize_settings()

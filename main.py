@@ -14,9 +14,6 @@ from tornado.web import StaticFileHandler
 
 from commands import get_app_info
 
-from settings_handler import SettingsHandler
-from themes_handler import ThemesHandler
-
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 # Turn off the Jupyter configuration system so configuration files on disk do
@@ -28,14 +25,12 @@ with open(os.path.join(HERE, 'package.json')) as fid:
 
 
 class ExampleApp(LabServerApp):
-    base_url = '/foo'
+    name = "lab"
+    app_name = "JupyterLab"
+    load_other_extensions = True
+    
     default_url = Unicode('/lab',
                           help='The default URL to redirect to from `/`')
-
-    extra_labextensions_path = List(Unicode(), config=True,
-        help="""extra paths to look for Javascript notebook extensions"""
-    )
-
     browser_test = Bool(False, config=True)
 
     lab_config = LabConfig(
@@ -51,14 +46,21 @@ class ExampleApp(LabServerApp):
         workspaces_dir = os.path.join(HERE, 'core_package', 'static', 'workspaces'),
     )
 
-    def init_webapp(self):
-        super().init_webapp()
+    def initialize_templates(self):
+        import pdb; pdb.set_trace()
+        self.static_paths = [self.lab_config.static_dir]
+        self.template_paths = [self.lab_config.templates_dir]
 
+    def initialize_handlers(self):
         # Handle labextension assets
-        web_app = self.web_app
+        import pdb; pdb.set_trace()
+        web_app = self.serverapp.web_app
         base_url = web_app.settings['base_url']
         page_config = web_app.settings.get('page_config_data', {})
         web_app.settings['page_config_data'] = page_config
+
+        # By default, make terminals available.
+        web_app.settings.setdefault('terminals_available', True)
 
         if self.browser_test:
             page_config['browserTest'] = True
@@ -76,54 +78,6 @@ class ExampleApp(LabServerApp):
             else:
                 dynamic_mime_extension.append(load_data)
 
-        handlers = []
-
-        labextensions_path = self.extra_labextensions_path + jupyter_path('labextensions')
-        labextensions_url = ujoin(base_url, "lab", r"extensions/(.*)")
-        handlers.append(
-            (labextensions_url, FileFindHandler, {
-                'path': labextensions_path,
-                'no_cache_paths': ['/'], # don't cache anything in labextensions
-            }))
-
-        # Handle requests for the list of settings. Make slash optional.
-        settings_path = ujoin(base_url, 'lab', 'api', 'settings')
-        settings_config = {
-            'app_settings_dir': self.lab_config.app_settings_dir,
-            'schemas_dir': self.lab_config.schemas_dir,
-            'settings_dir': self.lab_config.user_settings_dir,
-            'labextensions_path': labextensions_path
-        }
-
-        handlers.append((ujoin(settings_path, '?'), SettingsHandler, settings_config))
-
-        # Handle requests for an individual set of settings.
-        setting_path = ujoin(
-            settings_path, '(?P<schema_name>.+)')
-        handlers.append((setting_path, SettingsHandler, settings_config))
-
-        # Handle requests for themes
-        themes_path = ujoin(base_url, 'lab', 'api', 'themes', '(.*)')
-        handlers.append((
-            themes_path,
-            ThemesHandler,
-            {
-                'themes_url': themes_path,
-                'path': self.lab_config.themes_dir,
-                'labextensions_path': labextensions_path,
-                'no_cache_paths': ['/']
-            }
-        ))
-
-        web_app.add_handlers('.*$', handlers)
-
-    def start(self):
-        settings = self.web_app.settings
-
-        # By default, make terminals available.
-        settings.setdefault('terminals_available', True)
-
-        super().start()
-
 if __name__ == '__main__':
+    import pdb; pdb.set_trace()
     ExampleApp.launch_instance()

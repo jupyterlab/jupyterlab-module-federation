@@ -10,7 +10,7 @@
     "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
     "clean:labextension": "rimraf md_package/statick",
     "clean:all": "jlpm run clean:lib && jlpm run clean:labextension",
-    "install-ext": "pip install -e . && python ../labextension.py develop .",
+    "install-ext": "pip install -e . && python ../labextensions.py develop .",
     "prepare": "jlpm run clean && jlpm run build",
     "watch": "tsc -w",
     "watch:labextension": "node ../build-ext.js --watch .",

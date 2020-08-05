@@ -106,7 +106,7 @@ def develop_labextension(path, symlink=True, overwrite=False,
             if logger:
                 logger.info("Symlinking: %s -> %s" % (full_dest, path))
             os.symlink(path, full_dest)
-        elif not os.path.islink(path):
+        elif not os.path.islink(full_dest):
             raise ValueError("%s exists and is not a symlink" % path)
 
     elif os.path.isdir(path):
@@ -259,9 +259,11 @@ def _get_labextension_metadata(module):
         Importable Python module exposing the
         magic-named `_jupyter_labextension_paths` function
     """
+    try:
+        m = import_item(module)
+    except Exception:
+        m = None
 
-
-    m = import_item(module)
     if not hasattr(m, '_jupyter_labextension_paths'):
         if osp.exists(osp.abspath(module)):
             from setuptools import find_packages

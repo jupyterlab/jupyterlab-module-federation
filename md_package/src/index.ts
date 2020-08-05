@@ -35,7 +35,7 @@ namespace CommandIDs {
 /**
  * The name of the factory that creates markdown viewer widgets.
  */
-const FACTORY = 'Markdown Preview';
+const FACTORY = 'Markdown Preview (Federated)';
 
 /**
  * The markdown viewer plugin.

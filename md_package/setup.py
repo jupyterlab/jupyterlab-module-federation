@@ -2,7 +2,7 @@ import json
 import os
 from os.path import join as pjoin
 
-from jupyter_packaging import (
+from setupbase import (
     create_cmdclass, install_npm, ensure_targets,
     combine_commands, ensure_python, get_version    
 )
@@ -67,7 +67,7 @@ setup_args = dict(
     cmdclass= cmdclass,
     packages=setuptools.find_packages(),
     install_requires=[
-        "jupyterlab~=2.0",
+        "jupyterlab==3.0.0a5",
     ],
     zip_safe=False,
     include_package_data=True,

@@ -36,14 +36,22 @@ def main():
         """An app that launches an example and waits for it to start up, checking for
         JS console errors, JS errors, and Python logged errors.
         """
-        open_browser = Bool(False)
-        base_url = '/foo'
         ip = '127.0.0.1'
-        browser_test = True
+        open_browser = Bool(False)
+ 
+        def initialize_settings(self):
+            run_test(self.serverapp, run_browser)
+            super().initialize_settings()
 
-        def start(self):
-            run_test(self, run_browser)
-            super().start()
+    def _jupyter_server_extension_points():
+        return [
+            {
+                'module': __name__,
+                'app': App
+            }
+        ]
+
+    mod._jupyter_server_extension_points = _jupyter_server_extension_points
 
     App.__name__ = 'Test'
     App.launch_instance()

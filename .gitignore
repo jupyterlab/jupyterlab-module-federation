@@ -8,3 +8,4 @@ static
 lib
 dist
 tsconfig.tsbuildinfo
+.vscode

@@ -32,8 +32,9 @@ python main.py
 - Extensions should be discoverable
 
 ## Implementation
-- We add a node script that extension authors use to build extension bundles - `@jupyterlab/buildutils -> build-labextension`
-  - The script produces a set of static assets that are shipped along with a package (notionally on `pip`/`conda`)
+- We add a `labextensions build` Python script that is used to build bundles
+  - The command produces a set of static assets that are shipped along with a package (notionally on `pip`/`conda`)
+  - It needs to be a Python cli so it can use the dependency metadata from the active JupyterLab
   - The assets include a module federation `remoteEntry.js`, generated bundles, and some other files that we use
      - `package.orig.json` is the original `package.json` file that we use to gather metadata about the package
      - `build_log.json` has all of the webpack options used to build the extension, for debugging purposes
@@ -49,14 +50,14 @@ python main.py
 - We will update the `extension-manager` to target metadata on `pypi`/`conda` and consume those packages.
 
 ## Tools
-- `build-labextension` node command line tool
+- `jupyter labexension build` python command line tool
 - `jupyter labextension develop` python command line tool
 - `cookiecutter` for extension authors
 
 ## Workflow for extension authors
 - Use the `cookiecutter` to create the extension
-- Run `jupyter labextension develop` to create the symlink
-- Run `npm run watch` (included in the `cookiecutter`)
+- Run `jupyter labextension develop` to build and symlink the files
+- Run `jupyter labextension watch` to start watching
 - Run `jupyter lab`
 - Make changes to source
 - Refresh the application page

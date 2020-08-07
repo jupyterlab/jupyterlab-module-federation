@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "build": "npm run clean && webpack",
+    "build:extension": "build-labextension --core-path .",
     "build:prod": "npm run clean && webpack --mode production",
     "clean": "rimraf build",
     "prepublishOnly": "npm run build",
-    "watch": "npm run clean && webpack --watch"
+    "watch": "npm run clean && webpack --watch",
+    "watch:extension": "build-labextension --watch --core-path ."
   },
   "dependencies": {
     "@jupyterlab/application": "~3.0.0-alpha.6",

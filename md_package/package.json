@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "jlpm run build:lib",
-    "build:labextension": "build-labextension --core-path ../core_package .",
+    "build:labextension": "python ../labextensions.py build .",
     "build:lib": "tsc",
     "build:all": "jlpm run build:lib && jlpm run build:labextension",
     "clean": "jlpm run clean:lib",
@@ -13,7 +13,7 @@
     "install-ext": "pip install -e . && python ../labextensions.py develop .",
     "prepare": "jlpm run clean && jlpm run build",
     "watch": "tsc -w",
-    "watch:labextension": "build-labextension --core-path ../core_package --watch .",
+    "watch:labextension": "python ../labextensions.py watch .",
     "watch:all": "run-p watch watch:labextension"
   },
   "main": "lib/index.js",

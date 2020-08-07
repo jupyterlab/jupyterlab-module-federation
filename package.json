@@ -15,10 +15,10 @@
     "watch:md": "python labextensions.py watch ./md_package"
   },
   "devDependencies": {
-    "@jupyterlab/buildutils": "~3.0.0-alpha.6",
+    "@jupyterlab/buildutils": "~3.0.0-alpha.7",
     "ajv": "^6.12.3",
     "rimraf": "^3.0.2",
-    "webpack": "5.0.0-beta.21",
+    "webpack": "5.0.0-beta.22",
     "webpack-cli": "^3.3.10",
     "webpack-merge": "^5.0.9"
   },

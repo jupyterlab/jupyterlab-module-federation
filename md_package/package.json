@@ -19,16 +19,16 @@
   "main": "lib/index.js",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@jupyterlab/application": "^3.0.0-alpha.6",
-    "@jupyterlab/apputils": "^3.0.0-alpha.6",
-    "@jupyterlab/coreutils": "^5.0.0-alpha.6",
+    "@jupyterlab/application": "^3.0.0-alpha.7",
+    "@jupyterlab/apputils": "^3.0.0-alpha.7",
+    "@jupyterlab/coreutils": "^5.0.0-alpha.7",
     "@jupyterlab/example-federated-middle": "~2.1.0",
-    "@jupyterlab/markdownviewer": "^3.0.0-alpha.6",
-    "@jupyterlab/rendermime": "^3.0.0-alpha.6",
-    "@jupyterlab/settingregistry": "^3.0.0-alpha.6"
+    "@jupyterlab/markdownviewer": "^3.0.0-alpha.7",
+    "@jupyterlab/rendermime": "^3.0.0-alpha.7",
+    "@jupyterlab/settingregistry": "^3.0.0-alpha.7"
   },
   "devDependencies": {
-    "@jupyterlab/buildutils": "~3.0.0-alpha.6",
+    "@jupyterlab/buildutils": "~3.0.0-alpha.7",
     "@types/react": "16.9.41",
     "npm-run-all": "^4.1.5",
     "rimraf": "~3.0.0",

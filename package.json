@@ -5,16 +5,17 @@
   "scripts": {
     "build": "npm run build:core && npm run build:json && npm run build:middle && npm run build:md && npm run build:theme",
     "build:core": "cd core_package && npm run build",
-    "build:json": "node build-ext.js ./json_package",
-    "build:middle": "node build-ext.js ./middle_package",
-    "build:md": "node build-ext.js ./md_package",
-    "build:theme": "node build-ext.js ./theme_package",
+    "build:json": "build-labextension --core-path ./core_package ./json_package",
+    "build:middle": "build-labextension --core-path ./core_package ./middle_package",
+    "build:md": "build-labextension --core-path ./core_package ./md_package",
+    "build:theme": "build-labextenion --core-path ./core_package ./theme_package",
     "build:core:prod": "cd core_package && npm run build:prod",
-    "build:json:prod": "node build-ext.js --prod ./json_package",
+    "build:json:prod": "build-labextension --core-path ./core_package --prod ./json_package",
     "build:prod": "npm run build:core:prod && npm run build:json:prod",
-    "watch:md": "node build-ext.js ./md_package --watch"
+    "watch:md": "build-labextension --core-path ./core_package ./md_package --watch"
   },
   "devDependencies": {
+    "@jupyterlab/buildutils": "~3.0.0-alpha.6",
     "ajv": "^6.12.3",
     "rimraf": "^3.0.2",
     "webpack": "5.0.0-beta.22",

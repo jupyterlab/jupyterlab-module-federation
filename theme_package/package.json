@@ -1,6 +1,6 @@
 {
   "name": "@jupyterlab/example-federated-theme",
-  "version": "3.0.0-alpha.4",
+  "version": "3.0.0-alpha.6",
   "description": "JupyterLab - Default Dark Theme",
   "homepage": "https://github.com/jupyterlab/jupyterlab",
   "bugs": {
@@ -14,8 +14,8 @@
   "author": "Project Jupyter",
   "style": "style/index.css",
   "dependencies": {
-    "@jupyterlab/application": "^3.0.0-alpha.4",
-    "@jupyterlab/apputils": "^3.0.0-alpha.4"
+    "@jupyterlab/application": "^3.0.0-alpha.6",
+    "@jupyterlab/apputils": "^3.0.0-alpha.6"
   },
   "publishConfig": {
     "access": "public"

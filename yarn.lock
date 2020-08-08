@@ -3554,14 +3554,6 @@ enhanced-resolve@5.0.0-beta.10:
     graceful-fs "^4.2.0"
     tapable "^2.0.0-beta.10"
 
-enhanced-resolve@5.0.0-beta.8:
-  version "5.0.0-beta.8"
-  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.0.0-beta.8.tgz#f399920cb9f73350e61ab10bf2c7f36c37dbf032"
-  integrity sha512-6MteIR5h29V8UAsBVXkW7P2cAf+5p/c+Gu79xNCpBPt+hgKcJ0vujcX4vAiMGJjyq3SCHaY5N64C8HXwwRS3gQ==
-  dependencies:
-    graceful-fs "^4.2.0"
-    tapable "^2.0.0-beta.10"
-
 enhanced-resolve@^4.1.1:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-4.2.0.tgz#5d43bda4a0fd447cb0ebbe71bef8deff8805ad0d"
@@ -6987,35 +6979,7 @@ webpack-sources@^1.1.0, webpack-sources@^1.4.3:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
 
-webpack@5.0.0-beta.22:
-  version "5.0.0-beta.22"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.0.0-beta.22.tgz#c5560c3b470ccab69c66273a3bcf314f85926bea"
-  integrity sha512-t3HnQPy88PASM2ur0rvUXau8vAz287BlH8DpiaHoWkjlLThLx7olzExtTsVJEFen/9uTfWOV21dWS8kiYmGLkA==
-  dependencies:
-    "@types/estree" "^0.0.45"
-    "@webassemblyjs/ast" "1.9.0"
-    "@webassemblyjs/helper-module-context" "1.9.0"
-    "@webassemblyjs/wasm-edit" "1.9.0"
-    "@webassemblyjs/wasm-parser" "1.9.0"
-    acorn "^7.3.0"
-    chrome-trace-event "^1.0.2"
-    enhanced-resolve "5.0.0-beta.8"
-    eslint-scope "^5.0.0"
-    events "^3.0.0"
-    glob-to-regexp "^0.4.1"
-    graceful-fs "^4.1.15"
-    json-parse-better-errors "^1.0.2"
-    loader-runner "^4.0.0"
-    mime-types "^2.1.26"
-    neo-async "^2.6.1"
-    pkg-dir "^4.2.0"
-    schema-utils "^2.5.0"
-    tapable "^2.0.0-beta.10"
-    terser-webpack-plugin "^3.0.2"
-    watchpack "2.0.0-beta.13"
-    webpack-sources "2.0.0-beta.8"
-
-webpack@~5.0.0-beta.22:
+webpack@5.0.0-beta.24, webpack@~5.0.0-beta.22:
   version "5.0.0-beta.24"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.0.0-beta.24.tgz#03598047c635335883648f1d152fe48d38124059"
   integrity sha512-08TefC7UyXhnR7r6Ebjgb/uGhnAUNpuKLLsG6Xm26I/H3gYHkpiON5LLWO0oBKAz7E5mg/fDWVz/rrB6Ysbj+g==

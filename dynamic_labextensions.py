@@ -167,7 +167,7 @@ def build_labextension(path, logger=None):
         subprocess.check_call(['jlpm'], cwd=path)
     if logger:
         logger.info('Building extension in %s' % path)
-    subprocess.check_call(['npm', 'run', 'build:extension', path], cwd=core_path)
+    subprocess.check_call(['jlpm', 'run', 'build:extension', path], cwd=core_path)
 
 
 def watch_labextension(path, logger=None):
@@ -178,7 +178,7 @@ def watch_labextension(path, logger=None):
         subprocess.check_call(['jlpm'], cwd=path)
     if logger:
         logger.info('Watching extension in %s' % path)
-    subprocess.check_call(['npm', 'run', 'watch:extension', path], cwd=core_path)
+    subprocess.check_call(['jlpm', 'run', 'watch:extension', path], cwd=core_path)
 
 
 #------------------------------------------------------------------------------

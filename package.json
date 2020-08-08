@@ -3,21 +3,21 @@
   "version": "2.1.0",
   "private": true,
   "scripts": {
-    "build": "npm run build:core && npm run build:json && npm run build:middle && npm run build:md && npm run build:theme",
+    "build": "npm run build:core && npm run build:json && npm run build:middle && npm run build:theme",
     "build:core": "cd core_package && npm run build",
-    "build:json": "node build-ext.js ./json_package",
-    "build:middle": "node build-ext.js ./middle_package",
-    "build:md": "node build-ext.js ./md_package",
-    "build:theme": "node build-ext.js ./theme_package",
+    "build:json": "python labextensions.py build ./json_package",
+    "build:middle": "python labextensions.py build ./middle_package",
+    "build:theme": "python labextensions.py build ./theme_package",
     "build:core:prod": "cd core_package && npm run build:prod",
-    "build:json:prod": "node build-ext.js --prod ./json_package",
+    "build:json:prod": "python labextensions.py build --prod ./json_package",
     "build:prod": "npm run build:core:prod && npm run build:json:prod",
-    "watch:md": "node build-ext.js ./md_package --watch"
+    "watch:md": "python labextensions.py watch ./md_package"
   },
   "devDependencies": {
+    "@jupyterlab/buildutils": "~3.0.0-alpha.7",
     "ajv": "^6.12.3",
     "rimraf": "^3.0.2",
-    "webpack": "5.0.0-beta.22",
+    "webpack": "5.0.0-beta.24",
     "webpack-cli": "^3.3.10",
     "webpack-merge": "^5.0.9"
   },

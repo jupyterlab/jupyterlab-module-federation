@@ -30,7 +30,7 @@ from traitlets.utils.importstring import import_item
 
 DEPRECATED_ARGUMENT = object()
 
-__version__ = '0.1.0'
+HERE = osp.abspath(osp.dirname(__file__))
 
 
 #------------------------------------------------------------------------------
@@ -144,6 +144,10 @@ def develop_labextension_py(module, user=False, sys_prefix=False, overwrite=Fals
         dest = labext['dest']
         if logger:
             logger.info("Installing %s -> %s" % (src, dest))
+
+        if not os.path.exists(src):
+            build_labextension(src, logger=logger)
+
         full_dest = develop_labextension(
             src, overwrite=overwrite, symlink=symlink,
             user=user, sys_prefix=sys_prefix, labextensions_dir=labextensions_dir,
@@ -152,6 +156,30 @@ def develop_labextension_py(module, user=False, sys_prefix=False, overwrite=Fals
         full_dests.append(full_dest)
 
     return full_dests
+
+
+def build_labextension(path, logger=None):
+    """Build a labextension in the given path"""
+    # TODO: when porting to core, this will be in static/package.json
+    core_path = osp.join(HERE, 'core_package')
+    path = os.path.abspath(path)
+    if not osp.exists(osp.join(path, 'node_modules')):
+        subprocess.check_call(['jlpm'], cwd=path)
+    if logger:
+        logger.info('Building extension in %s' % path)
+    subprocess.check_call(['jlpm', 'run', 'build:extension', path], cwd=core_path)
+
+
+def watch_labextension(path, logger=None):
+    """Watch a labextension in a given path"""
+    core_path = osp.join(HERE, 'core_package')
+    path = os.path.abspath(path)
+    if not osp.exists(osp.join(path, 'node_modules')):
+        subprocess.check_call(['jlpm'], cwd=path)
+    if logger:
+        logger.info('Watching extension in %s' % path)
+    subprocess.check_call(['jlpm', 'run', 'watch:extension', path], cwd=core_path)
+
 
 #------------------------------------------------------------------------------
 # Private API

@@ -26,7 +26,7 @@ from commands import (
 from jupyterlab.coreconfig import CoreConfig
 from jupyterlab.debuglog import DebugLogFileMixin
 
-from dynamic_labextensions import develop_labextension_py
+from dynamic_labextensions import develop_labextension_py, build_labextension, watch_labextension
 
 
 flags = dict(base_flags)
@@ -183,6 +183,22 @@ class DevelopLabExtensionApp(BaseExtensionApp):
             symlink=self.symlink)
 
 
+class BuildLabExtensionApp(BaseExtensionApp):
+    description = "Build labextension"
+
+    def run_task(self):
+        self.extra_args = self.extra_args or [os.getcwd()]
+        build_labextension(self.extra_args[0], logger=self.log)
+
+
+class WatchLabExtensionApp(BaseExtensionApp):
+    description = "Watch labextension"
+
+    def run_task(self):
+        self.extra_args = self.extra_args or [os.getcwd()]
+        watch_labextension(self.extra_args[0], logger=self.log)
+
+
 class UpdateLabExtensionApp(BaseExtensionApp):
     description = "Update labextension(s)"
     flags = update_flags
@@ -314,6 +330,8 @@ class CheckLabExtensionsApp(BaseExtensionApp):
 _examples = """
 jupyter labextension list                        # list all configured labextensions
 jupyter labextension develop                     # develop a dynamic labextension
+jupyter labextension build                       # build a dynamic labextension
+jupyter labextension watch                       # watch a dynamic labextension
 jupyter labextension install <extension name>    # install a labextension
 jupyter labextension uninstall <extension name>  # uninstall a labextension
 """
@@ -329,6 +347,8 @@ class LabExtensionApp(JupyterApp):
     subcommands = dict(
         install=(InstallLabExtensionApp, "Install labextension(s)"),
         develop=(DevelopLabExtensionApp, "Develop labextension(s)"),
+        build=(BuildLabExtensionApp, "Build labextension"),
+        watch=(WatchLabExtensionApp, "Watch labextension"),
         update=(UpdateLabExtensionApp, "Update labextension(s)"),
         uninstall=(UninstallLabExtensionApp, "Uninstall labextension(s)"),
         list=(ListLabExtensionsApp, "List labextensions"),

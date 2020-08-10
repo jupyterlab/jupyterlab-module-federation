@@ -5,6 +5,7 @@ set -o pipefail
 pip install --user setuptools pip --upgrade
 pip install -e ".[test]"
 jlpm 
+cat json_package/node_modules/.bin/build-labextension
 jlpm run build
 pip install -e ./json_package
 pip install -e ./middle_package

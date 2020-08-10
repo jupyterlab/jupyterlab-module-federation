@@ -5,13 +5,13 @@
   "scripts": {
     "build": "npm run build:core && npm run build:json && npm run build:middle && npm run build:theme",
     "build:core": "cd core_package && npm run build",
-    "build:json": "python labextensions.py build ./json_package",
-    "build:middle": "python labextensions.py build ./middle_package",
-    "build:theme": "python labextensions.py build ./theme_package",
+    "build:json": "jupyter labextension build ./json_package",
+    "build:middle": "jupyter labextension build ./middle_package",
+    "build:theme": "jupyter labextension build ./theme_package",
     "build:core:prod": "cd core_package && npm run build:prod",
-    "build:json:prod": "python labextensions.py build --prod ./json_package",
+    "build:json:prod": "jupyter labextension build --prod ./json_package",
     "build:prod": "npm run build:core:prod && npm run build:json:prod",
-    "watch:md": "python labextensions.py watch ./md_package"
+    "watch:md": "jupyter labextension watch ./md_package"
   },
   "devDependencies": {
     "@jupyterlab/buildutils": "~3.0.0-alpha.7",

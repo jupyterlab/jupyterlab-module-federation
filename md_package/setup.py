@@ -67,7 +67,7 @@ setup_args = dict(
     cmdclass= cmdclass,
     packages=setuptools.find_packages(),
     install_requires=[
-        "jupyterlab==3.0.0a7",
+        "jupyterlab==3.0.0a8",
     ],
     zip_safe=False,
     include_package_data=True,

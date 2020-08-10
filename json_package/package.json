@@ -41,6 +41,7 @@
     "react-json-tree": "^0.11.2"
   },
   "devDependencies": {
+    "@jupyterlab/buildutils": "~3.0.0-alpha.7",
     "@types/react": "~16.9.16",
     "@types/react-dom": "~16.9.4",
     "@types/react-highlighter": "^0.3.4",

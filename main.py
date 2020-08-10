@@ -5,14 +5,14 @@ from jupyter_core.paths import jupyter_path
 from jupyterlab_server import LabServerApp, LabConfig
 from jupyterlab_server.server import FileFindHandler, APIHandler
 
-from notebook.utils import url_path_join as ujoin, url_escape
+from jupyter_server.utils import url_path_join as ujoin, url_escape
 import json
 import os
 from traitlets import Unicode, List, Bool
 
 from tornado.web import StaticFileHandler
 
-from commands import get_app_info
+from jupyterlab.commands import get_app_info
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 

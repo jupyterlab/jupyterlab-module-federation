@@ -2,8 +2,8 @@
 set -ex
 set -o pipefail
 
-jupyter labextensions list
+jupyter labextension list
 python run.py
 
 pip uninstall -y md_package
-jupyter labextensions uninstall @jupyterlab/federated-theme
+jupyter labextension uninstall @jupyterlab/federated-theme

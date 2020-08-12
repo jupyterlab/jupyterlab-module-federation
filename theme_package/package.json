@@ -17,6 +17,9 @@
     "@jupyterlab/application": "^3.0.0-alpha.9",
     "@jupyterlab/apputils": "^3.0.0-alpha.9"
   },
+  "devDependencies": {
+    "@jupyterlab/buildutils": "~3.0.0-alpha.9"
+  },
   "publishConfig": {
     "access": "public"
   },

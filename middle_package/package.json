@@ -7,10 +7,9 @@
     "watch": "npm run clean && webpack --watch"
   },
   "dependencies": {
-    "@jupyterlab/coreutils": "^5.0.0-alpha.8"
+    "@jupyterlab/coreutils": "^5.0.0-alpha.9"
   },
   "devDependencies": {
-    "@jupyterlab/buildutils": "~3.0.0-alpha.8",
     "rimraf": "~3.0.0",
     "typedoc": "^0.17.7",
     "typescript": "~3.9.2"

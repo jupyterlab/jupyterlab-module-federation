@@ -14,7 +14,7 @@
     "watch:md": "jupyter labextension watch ./md_package"
   },
   "devDependencies": {
-    "@jupyterlab/buildutils": "~3.0.0-alpha.9",
+    "@jupyterlab/buildutils": "~3.0.0-alpha.10",
     "ajv": "^6.12.3",
     "rimraf": "^3.0.2",
     "webpack": "5.0.0-beta.24",

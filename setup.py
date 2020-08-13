@@ -8,8 +8,7 @@ setup(name='jupyterlab-module-federation',
       version='0.1.0',
       py_modules = ['main'],
       install_requires=[
-        'jupyterlab==3.0.0a5',
-        'jupyterlab_server==2.0.0a2'
+        'jupyterlab==3.0.0a10'
     ],
     extras_require={
         'test': ['pytest', 'coverage']

@@ -50,6 +50,7 @@
     "@jupyterlab/theme-light-extension": "~3.0.0-alpha.10",
     "@jupyterlab/toc-extension": "~5.0.0-alpha.10",
     "@jupyterlab/tooltip-extension": "~3.0.0-alpha.10",
+    "@jupyterlab/translation-extension": "~3.0.0-alpha.10",
     "@jupyterlab/ui-components-extension": "~3.0.0-alpha.10",
     "@jupyterlab/vdom-extension": "~3.0.0-alpha.10",
     "@jupyterlab/vega5-extension": "~3.0.0-alpha.10"
@@ -159,6 +160,8 @@
     "@jupyterlab/toc-extension": "~5.0.0-alpha.10",
     "@jupyterlab/tooltip": "~3.0.0-alpha.10",
     "@jupyterlab/tooltip-extension": "~3.0.0-alpha.10",
+    "@jupyterlab/translation": "~3.0.0-alpha.10",
+    "@jupyterlab/translation-extension": "~3.0.0-alpha.10",
     "@jupyterlab/ui-components": "~3.0.0-alpha.10",
     "@jupyterlab/ui-components-extension": "~3.0.0-alpha.10",
     "@jupyterlab/vdom": "~3.0.0-alpha.10",
@@ -210,6 +213,7 @@
       "@jupyterlab/statusbar",
       "@jupyterlab/terminal",
       "@jupyterlab/tooltip",
+      "@jupyterlab/translation",
       "@jupyterlab/ui-components",
       "@lumino/algorithm",
       "@lumino/application",
@@ -259,6 +263,7 @@
       "@jupyterlab/terminal-extension": "",
       "@jupyterlab/theme-light-extension": "",
       "@jupyterlab/tooltip-extension": "",
+      "@jupyterlab/translation-extension": "",
       "@jupyterlab/ui-components-extension": "",
       "@jupyterlab/vdom-extension": ""
     },

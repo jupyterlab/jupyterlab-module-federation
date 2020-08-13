@@ -2208,6 +2208,18 @@
     "@lumino/messaging" "^1.3.3"
     "@lumino/widgets" "^1.11.1"
 
+"@jupyterlab/translation-extension@~3.0.0-alpha.10":
+  version "3.0.0-alpha.10"
+  resolved "https://registry.yarnpkg.com/@jupyterlab/translation-extension/-/translation-extension-3.0.0-alpha.10.tgz#024d99cf6f373ae60ce13ee15f0c023d7331ba6b"
+  integrity sha512-U+HNWePN99jAVyy4pYj0PrBvXGC+hfFJOacb/mJP3Q03aHFqWuSJJ9uptUVGFrssKr7699dD54sa12XTh95+fQ==
+  dependencies:
+    "@jupyterlab/application" "^3.0.0-alpha.10"
+    "@jupyterlab/apputils" "^3.0.0-alpha.10"
+    "@jupyterlab/mainmenu" "^3.0.0-alpha.10"
+    "@jupyterlab/settingregistry" "^3.0.0-alpha.10"
+    "@jupyterlab/translation" "^3.0.0-alpha.10"
+    "@lumino/widgets" "^1.11.1"
+
 "@jupyterlab/translation@^3.0.0-alpha.10":
   version "3.0.0-alpha.10"
   resolved "https://registry.yarnpkg.com/@jupyterlab/translation/-/translation-3.0.0-alpha.10.tgz#75eec873f11db3591dc6902cf8bc3f42f923a082"
